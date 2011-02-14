@@ -1,3 +1,5 @@
-module Torrents
-  # Your code goes here...
+class Torrents
+  def self.method_missing(m, *args, &block) 
+    
+  end
 end

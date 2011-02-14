@@ -6,11 +6,11 @@ Gem::Specification.new do |s|
   s.name        = "torrents"
   s.version     = Torrents::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["TODO: Write your name"]
-  s.email       = ["TODO: Write your email address"]
+  s.authors     = ["Linus Oleander"]
+  s.email       = ["linus@oleander.nu"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Search and download torrents from your favorite bittorrent tracker}
+  s.description = %q{Search and download torrents from your favorite bittorrent tracker using Ruby}
 
   s.rubyforge_project = "torrents"
 

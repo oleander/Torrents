@@ -1,3 +1,9 @@
+# Do NOT end the url with a slash "/"
+# It must only start with a slash "/"
 ---
   the_pirate_bay:
-    name: "Some name"
+    site: "The pirate bay"
+    url: http://thepiratebay.org
+    search: /search/<SEARCH>/<PAGE>/99
+    start_page_index: 0
+    recent: /recent/<PAGE>

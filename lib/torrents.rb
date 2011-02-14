@@ -12,6 +12,8 @@ class Torrents
   end
   
   def url
+    puts self[:current]
+    puts @current
     if @search_value
       pend = @current["search"].gsub('<SEARCH>', @search_value).gsub('<PAGE>', self.inner_page)
     else 

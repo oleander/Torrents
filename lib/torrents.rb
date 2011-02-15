@@ -78,7 +78,8 @@ class Torrents
         @torrents << Container::Torrent.new({
           details: self.append_url(tr.at_css(@current["css"]["details"]).attr('href')),
           torrent: self.append_url(tr.to_s.match(/(http:\/\/.+\.torrent)/)[1]),
-          title: tr.at_css(@current["css"]["details"]).content
+          title: tr.at_css(@current["css"]["details"]).content,
+          tracker: @current
         })
       end; return @torrents
     end

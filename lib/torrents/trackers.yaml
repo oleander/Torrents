@@ -11,3 +11,4 @@
       tr: '#searchResult tr:not(:last)'
       details: .detLink
       title: .detLink
+      seeders: .col2 dd:nth-child(8)

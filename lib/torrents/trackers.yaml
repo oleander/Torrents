@@ -10,3 +10,4 @@
     css:
       tr: '#searchResult tr:not(:last)'
       details: .detLink
+      title: .detLink

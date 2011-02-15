@@ -1,4 +1,8 @@
 require 'spec_helper'
+def valid_url
+  /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
+end
+
 describe Torrents do
   it "should only respond to that exists in the trackers yaml file" do
     lambda {
@@ -35,6 +39,22 @@ describe Torrents do
   end
   
   it "should contain a detailed link" do
-    Torrents.the_pirate_bay.page(1).first.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
+    details = Torrents.the_pirate_bay.page(1).first.details
+    details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
+    details.should match(valid_url)
+  end
+  
+  it "should contain a torrent url" do
+    torrent = Torrents.the_pirate_bay.page(1).first.torrent
+    torrent.should match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
+    torrent.should match(valid_url)
+  end
+  
+  it "should contain a title without html tags" do
+    Torrents.the_pirate_bay.page(1).first.title.should_not match(/<\/?[^>]*>/)
+  end
+  
+  it "should contain the right instances" do
+    Torrents.the_pirate_bay.page(1).first.should be_instance_of(Container::Torrent)
   end
 end

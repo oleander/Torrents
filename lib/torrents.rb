@@ -76,10 +76,15 @@ class Torrents
     def torrents
       self.content.css(@current["css"]["tr"]).each do |tr|
         @torrents << Container::Torrent.new({
-          details: @current["url"] + tr.at_css(@current["css"]["details"]).attr('href')
+          details: self.append_url(tr.at_css(@current["css"]["details"]).attr('href')),
+          torrent: self.append_url(tr.to_s.match(/(http:\/\/.+\.torrent)/)[1]),
+          title: tr.at_css(@current["css"]["details"]).content
         })
-      end
-      
-      return @torrents
+      end; return @torrents
+    end
+    
+    # Appends the site url to the url if needed
+    def append_url(data)
+      data.match(/^http:\/\//) ? data : @current["url"] + data
     end
 end

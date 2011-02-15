@@ -17,4 +17,20 @@ describe Torrents do
   it "should be possible to specify a page" do
     Torrents.the_pirate_bay.page(5).url.should eq("http://thepiratebay.org/recent/5")
   end
+  
+  it "should raise an error if the method does not exist" do
+    lambda {
+      Torrents.the_pirate_bay.random
+    }.should raise_error(NoMethodError)
+  end
+  
+  it "should not be possible to access the torrents from outside the scope" do
+    lambda {
+      Torrents.the_pirate_bay.torrents
+    }.should raise_error(NoMethodError)  
+  end
+  
+  it "should contain 100 torrents" do
+    Torrents.the_pirate_bay.page(1).count.should eq(30)
+  end
 end

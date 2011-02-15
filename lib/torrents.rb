@@ -1,9 +1,20 @@
 require 'yaml'
+require 'rest_client'
+require 'nokogiri'
+
 class Torrents
   attr_accessor :page
   
   def initialize
     @trackers = YAML::load(File.read('lib/torrents/trackers.yaml'))
+  end
+  
+  def download
+    RestClient.get self.url, {:timeout => 10}
+  end
+  
+  def content
+    Nokogiri::HTML self.download
   end
   
   # Set the default page
@@ -12,8 +23,6 @@ class Torrents
   end
   
   def url
-    puts self[:current]
-    puts @current
     if @search_value
       pend = @current["search"].gsub('<SEARCH>', @search_value).gsub('<PAGE>', self.inner_page)
     else 
@@ -45,6 +54,13 @@ class Torrents
     return self
   end
   
+  # If the user is trying to do some funky stuff to the data
+  def method_missing(method, *args, &block)
+    super(method, args, block) unless [].methods.include? method
+    
+    self.torrents.send(method)
+  end
+  
   def self.method_missing(method, *args, &block)
     this = Torrents.new
     # Raises an exception if the site isn't in the trackers.yaml file
@@ -53,4 +69,9 @@ class Torrents
     # Yes, I like return :)
     return this.add(method)
   end
+  
+  protected
+    def torrents
+      self.content.css('#searchResult tr:not(:last)')
+    end
 end

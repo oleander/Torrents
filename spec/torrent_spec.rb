@@ -20,7 +20,7 @@ describe Container::Torrent do
   
   it "should have some seeders" do
     @torrent.seeders.should be_instance_of(Fixnum)
-    @torrent.seeders.should > 1000
+    @torrent.seeders.should eq(9383)
   end
   
   it "should contain some accessors" do

@@ -33,4 +33,8 @@ describe Torrents do
   it "should contain 100 torrents" do
     Torrents.the_pirate_bay.page(1).count.should eq(30)
   end
+  
+  it "should contain a detailed link" do
+    Torrents.the_pirate_bay.page(1).first.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
+  end
 end

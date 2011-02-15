@@ -1,12 +1,14 @@
 require 'yaml'
 require 'rest_client'
 require 'nokogiri'
+require 'torrents/torrent'
 
 class Torrents
   attr_accessor :page
   
   def initialize
     @trackers = YAML::load(File.read('lib/torrents/trackers.yaml'))
+    @torrents = []
   end
   
   def download
@@ -72,6 +74,12 @@ class Torrents
   
   protected
     def torrents
-      self.content.css('#searchResult tr:not(:last)')
+      self.content.css(@current["css"]["tr"]).each do |tr|
+        @torrents << Container::Torrent.new({
+          details: @current["url"] + tr.at_css(@current["css"]["details"]).attr('href')
+        })
+      end
+      
+      return @torrents
     end
 end

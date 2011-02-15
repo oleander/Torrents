@@ -7,3 +7,6 @@
     search: /search/<SEARCH>/<PAGE>/99
     start_page_index: 0
     recent: /recent/<PAGE>
+    css:
+      tr: '#searchResult tr:not(:last)'
+      details: .detLink

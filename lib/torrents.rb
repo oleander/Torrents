@@ -3,7 +3,7 @@ require 'rest_client'
 require 'nokogiri'
 require 'torrents/torrent'
 
-class Torrents
+class Torrents < Container::Shared
   attr_accessor :page
   
   def initialize
@@ -11,12 +11,8 @@ class Torrents
     @torrents = []
   end
   
-  def download
-    RestClient.get self.url, {:timeout => 10}
-  end
-  
   def content
-    Nokogiri::HTML self.download
+    Nokogiri::HTML self.download(self.url)
   end
   
   # Set the default page
@@ -75,12 +71,14 @@ class Torrents
   protected
     def torrents
       self.content.css(@current["css"]["tr"]).each do |tr|
-        @torrents << Container::Torrent.new({
+        torrent = Container::Torrent.new({
           details: self.append_url(tr.at_css(@current["css"]["details"]).attr('href')),
           torrent: self.append_url(tr.to_s.match(/(http:\/\/.+\.torrent)/)[1]),
           title: tr.at_css(@current["css"]["details"]).content,
           tracker: @current
-        })
+        }) rescue nil
+        
+        @torrents << torrent unless torrent.nil?
       end; return @torrents
     end
     

@@ -4,11 +4,11 @@
   the_pirate_bay:
     site: "The pirate bay"
     url: http://thepiratebay.org
-    search: /search/<SEARCH>/<PAGE>/99
+    search: /search/<SEARCH>/<PAGE>/99/0
     start_page_index: 0
     recent: /recent/<PAGE>
     css:
-      tr: '#searchResult tr:not(:last)'
+      tr: '#searchResult tr'
       details: .detLink
       title: .detLink
-      seeders: .col2 dd:nth-child(8)
+      seeders: '.col2 dd:nth-child(8), dd:nth-child(21)'

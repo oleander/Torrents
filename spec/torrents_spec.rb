@@ -3,15 +3,11 @@ def valid_url
   /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
 end
 
-def rest_client(url)
-  RestClient.should_receive(:get).with(url, {:timeout => 10}).any_number_of_times.and_return(File.read('spec/data/the_pirate_bay/recent.html'))
+def rest_client(url, file = "recent")
+  RestClient.should_receive(:get).with(url, {:timeout => 10}).any_number_of_times.and_return(File.read("spec/data/the_pirate_bay/#{file}.html"))
 end
 
-describe Torrents do
-  before(:each) do
-    # RestClient.should_receive(:get).with("http://thepiratebay.org/torrent/6173093/", {:timeout => 10}).any_number_of_times.and_return(File.read('spec/data/the_pirate_bay/recent.html'))
-  end
-  
+describe Torrents do  
   it "should only respond to that exists in the trackers yaml file" do
     lambda {
       Torrents.the_pirate_bay
@@ -23,7 +19,7 @@ describe Torrents do
   end
   
   it "should be possible to add a search string" do
-    Torrents.the_pirate_bay.search("string").url.should eq("http://thepiratebay.org/search/string/0/99")
+    Torrents.the_pirate_bay.search("string").url.should eq("http://thepiratebay.org/search/string/0/99/0")
   end
   
   it "should be possible to specify a page" do
@@ -69,5 +65,21 @@ describe Torrents do
   it "should contain the right instances" do
     rest_client("http://thepiratebay.org/recent/1")
     Torrents.the_pirate_bay.page(1).first.should be_instance_of(Container::Torrent)
+  end
+  
+  it "should be possible to search for a string, for real" do
+    rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
+    Torrents.the_pirate_bay.search("chuck").first.details.should match(/6149110/)
+    Torrents.the_pirate_bay.search("chuck").last.details.should match(/6093865/)    
+    Torrents.the_pirate_bay.search("chuck").count.should eq(30)
+  end
+  
+  it "should not contain any html tags" do
+    
+    Torrents.the_pirate_bay.search("chuck").to_a.each do |torrent|
+      [:details, :torrent, :title, :seeders, :dead?].each do |method|
+        torrent.send(method).to_s.should_not match(/<\/?[^>]*>/)
+      end
+    end
   end
 end

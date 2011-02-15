@@ -26,7 +26,7 @@ describe Container::Torrent do
   it "should contain some accessors" do
     lambda {
       [:details, :torrent, :title, :seeders, :dead?].each do |method|
-        @torrent.send(method)
+        @torrent.send(method).to_s.should_not match(/<\/?[^>]*>/)
       end
     }.should_not raise_error(NoMethodError)
   end

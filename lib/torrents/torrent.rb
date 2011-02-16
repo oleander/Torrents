@@ -39,12 +39,12 @@ module Container
     # If the tracker that is being loaded in {load} craches, 
     # then this makes sure that the entire application won"t crash
     # {method} (Hash) The method that is being called inside the trackers module
-    # {tr} (Nokogiri) The object that contains the HTML content of the current row
+    # {tr} (Nokogiri | [Nokogiri]) The object that contains the HTML content of the current row
     # TODO: Return a default value if the method raises an exception, 
     #       the empty string does not work in all cases
     def inner_call(method, tr)
       begin
-        return self.load.send(method, (tr.class == Array ? tr : [tr]))
+        return self.load.send(method, (tr.class == Array ? tr.first : tr))
       rescue
         STDERR.puts "{inner_call} An error in the #{method} method occurred"
         STDERR.puts "==> \t#{$!.inspect}"
@@ -68,7 +68,11 @@ module Container
     # Is the torrent dead?
     # The definition of dead is; no seeders
     def dead?
-      self.inner_call(:seeders, self.content).to_i <= 0
+      self.seeders <= 0
+    end
+    
+    def seeders
+      self.inner_call(:seeders, self.content).to_i
     end
     
     # Is the torrent valid?
@@ -96,7 +100,7 @@ module Container
     # Downloads the detailed view for this torrent
     # Returns an Nokogiri object
     def content
-      Nokogiri::HTML self.download(self.downloadable(@details))
+      @content ||= Nokogiri::HTML self.download(self.downloadable(@details))
     end
   end
 end

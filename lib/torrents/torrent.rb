@@ -2,11 +2,8 @@ module Container
   require "rest_client"
   require "nokogiri"
   require "torrents/trackers/the_pirate_bay"
-  require "/Users/linus/Documents/Projekt/rchardet/lib/rchardet"
+  require "rchardet"
   require "iconv"
-  
-
-
     
   class Shared
     

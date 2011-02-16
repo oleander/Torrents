@@ -4,10 +4,34 @@ def valid_url
 end
 
 def rest_client(url, file = "recent")
-  RestClient.should_receive(:get).with(url, {:timeout => 10}).any_number_of_times.and_return(File.read("spec/data/the_pirate_bay/#{file}.html"))
+  mock(RestClient).should_receive(:get).with(url, {:timeout => 10}).any_number_of_times.and_return(File.read("spec/data/the_pirate_bay/#{file}.html"))
 end
 
-describe Torrents do  
+describe Torrents do
+  it "should contain the right type when trying to do a search" do
+    rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
+    torrents = Torrents.the_pirate_bay.debugger(true).search("chuck")
+    torrents.each do |torrent|
+      torrent.details.should be_instance_of(String)
+      torrent.title.should be_instance_of(String)
+      torrent.seeders.should be_instance_of(Fixnum)
+      torrent.torrent.should be_instance_of(String)
+      torrent.should be_valid
+    end
+  end
+  
+  it "should contain the right type when trying to do fetch the most recent torrent" do
+    rest_client("http://thepiratebay.org/recent/1")
+    torrents = Torrents.the_pirate_bay.debugger(true)
+    torrents.each do |torrent|
+      torrent.details.should be_instance_of(String)
+      torrent.title.should be_instance_of(String)
+      torrent.seeders.should be_instance_of(Fixnum)
+      torrent.torrent.should be_instance_of(String)
+      torrent.should be_valid
+    end
+  end
+  
   it "should only respond to that exists in the trackers yaml file" do
     lambda {
       Torrents.the_pirate_bay
@@ -39,47 +63,47 @@ describe Torrents do
   end
   
   it "should contain 100 torrents" do
-    rest_client("http://thepiratebay.org/recent/1")
-    Torrents.the_pirate_bay.page(1).count.should eq(30)
-  end
+     rest_client("http://thepiratebay.org/recent/1")
+     Torrents.the_pirate_bay.debugger(true).page(1).count.should eq(30)
+   end
+   
+   it "should contain a detailed link" do
+     rest_client("http://thepiratebay.org/recent/1")
+     details = Torrents.the_pirate_bay.debugger(true).page(1).first.details
+     details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
+     details.should match(valid_url)
+   end
+   
+   it "should contain a torrent url" do
+     rest_client("http://thepiratebay.org/recent/1")
+     torrent = Torrents.the_pirate_bay.debugger(true).page(1).first.torrent
+     torrent.should match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
+     torrent.should match(valid_url)
+   end
+   
+   it "should contain a title without html tags" do
+     rest_client("http://thepiratebay.org/recent/1")
+     Torrents.the_pirate_bay.debugger(true).page(1).first.title.should_not match(/<\/?[^>]*>/)
+   end
   
-  it "should contain a detailed link" do
-    rest_client("http://thepiratebay.org/recent/1")
-    details = Torrents.the_pirate_bay.page(1).first.details
-    details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
-    details.should match(valid_url)
-  end
-  
-  it "should contain a torrent url" do
-    rest_client("http://thepiratebay.org/recent/1")
-    torrent = Torrents.the_pirate_bay.page(1).first.torrent
-    torrent.should match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
-    torrent.should match(valid_url)
-  end
-  
-  it "should contain a title without html tags" do
-    rest_client("http://thepiratebay.org/recent/1")
-    Torrents.the_pirate_bay.page(1).first.title.should_not match(/<\/?[^>]*>/)
-  end
-  
-  it "should contain the right instances" do
-    rest_client("http://thepiratebay.org/recent/1")
-    Torrents.the_pirate_bay.page(1).first.should be_instance_of(Container::Torrent)
-  end
-  
-  it "should be possible to search for a string, for real" do
-    rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
-    Torrents.the_pirate_bay.search("chuck").first.details.should match(/6149110/)
-    Torrents.the_pirate_bay.search("chuck").last.details.should match(/6093865/)    
-    Torrents.the_pirate_bay.search("chuck").count.should eq(30)
-  end
-  
-  it "should not contain any html tags" do
-    
-    Torrents.the_pirate_bay.search("chuck").to_a.each do |torrent|
-      [:details, :torrent, :title, :dead?].each do |method|
-        torrent.send(method).to_s.should_not match(/<\/?[^>]*>/)
-      end
-    end
-  end
+   it "should contain the right instances" do
+     rest_client("http://thepiratebay.org/recent/1")
+     Torrents.the_pirate_bay.debugger(true).page(1).first.should be_instance_of(Container::Torrent)
+   end
+   
+   it "should be possible to search for a string, for real" do
+     rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
+     Torrents.the_pirate_bay.debugger(true).search("chuck").first.details.should match(/\d+/)
+     Torrents.the_pirate_bay.debugger(true).search("chuck").last.details.should match(/\d+/)    
+     Torrents.the_pirate_bay.debugger(true).search("chuck").count.should eq(30)
+   end
+   
+   it "should not contain any html tags" do
+     rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
+     Torrents.the_pirate_bay.debugger(true).search("chuck").to_a.each do |torrent|
+       [:details, :torrent, :title, :dead?, :seeders].each do |method|
+         torrent.send(method).to_s.should_not match(/<\/?[^>]*>/)
+       end
+     end
+   end
 end

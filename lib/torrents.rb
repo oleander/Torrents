@@ -46,6 +46,11 @@ class Torrents < Container::Shared
     return self
   end
   
+  def debugger(value)
+    Container::Shared.debugger(@debug = value)
+    return self
+  end
+  
   # Set the search value
   def search(value)
     @search_value = value
@@ -74,10 +79,11 @@ class Torrents < Container::Shared
     def torrents
       self.content.css(@current["css"]["tr"]).each do |tr|
         torrent = Container::Torrent.new({
-          details: self.inner_details(tr), # self.append_url(tr.at_css(@current["css"]["details"]).attr('href')),
-          torrent: self.inner_torrent(tr), #self.append_url(tr.to_s.match(/(http:\/\/.+\.torrent)/)[1]),
-          title: self.inner_torrent(tr), #tr.at_css(@current["css"]["details"]).content,
-          tracker: @current
+          details: self.inner_details(tr),
+          torrent: self.inner_torrent(tr),
+          title: self.inner_torrent(tr),
+          tracker: @current,
+          debug: @debug
         })
         
         @torrents << torrent if torrent.valid?

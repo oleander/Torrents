@@ -6,6 +6,9 @@ module Container
   require "iconv"
   
   class Shared
+    def self.debugger(value)
+      @debug = value
+    end
     
     # Downloads the URL, returns an empty string if an error occurred
     # Here we try to convert the downloaded content to UTF8, 
@@ -16,9 +19,9 @@ module Container
       begin
         data = RestClient.get url, {:timeout => 10}
         cd = CharDet.detect(data)
-        return (cd["confidence"] > 0.6) ? Iconv.conv(cd["encoding"], "UTF-8", data) : data
+        return (cd["confidence"] > 0.6) ? (Iconv.conv(cd["encoding"] + "//IGNORE", "UTF-8", data) rescue data) : data
       rescue
-        self.error("Something when wrong when trying to fetch #{url}", "")
+        self.error("Something when wrong when trying to fetch #{url}", $!)
       end; ""
     end
     
@@ -28,10 +31,11 @@ module Container
     # {error} (Exception) The actual error that was thrown
     # TODO: Don"t print any errors if the debuger is set to {false}
     def error(messages, error = "")
+      return unless @debug
       messages = messages.class == Array ? messages : [messages]
       STDERR.puts "The Torrent Gem"
-      STDERR.puts "\t" + messages.join("\n\t")
-      STDERR.puts "\t" + error.inspect
+      STDERR.puts "==>\t" + messages.join("\n\t")
+      STDERR.puts "==>\t" + error.inspect
       STDERR.puts "\n\n"
     end
     
@@ -40,15 +44,12 @@ module Container
     # then this makes sure that the entire application won"t crash
     # {method} (Hash) The method that is being called inside the trackers module
     # {tr} (Nokogiri | [Nokogiri]) The object that contains the HTML content of the current row
-    # TODO: Return a default value if the method raises an exception, 
-    #       the empty string does not work in all cases
     def inner_call(method, tr)
       begin
         return self.load.send(method, (tr.class == Array ? tr.first : tr))
       rescue
-        STDERR.puts "{inner_call} An error in the #{method} method occurred"
-        STDERR.puts "==> \t#{$!.inspect}"
-      end; "" # Se till alla ladda ett default-värde baserat på vilken metod det är som annropas
+        self.error("{inner_call} An error in the #{method} method occurred", $!)
+      end; ""
     end
     
     # Creating a singleton of the {tracker} class
@@ -63,6 +64,7 @@ module Container
     
     def initialize(args)
       args.keys.each { |name| instance_variable_set "@" + name.to_s, args[name] }
+      Container::Shared.debugger(@debug)
     end
     
     # Is the torrent dead?
@@ -76,7 +78,9 @@ module Container
     # If the seeder-tag isn't found, the value one (1) will be returned.
     # Returns an integer from 0 to inf
     def seeders
-      self.inner_call(:seeders, self.content).to_i
+      return @seeders if @seeders
+      seeders = self.inner_call(:seeders, self.content)
+      @seeders ||= (seeders.nil? or seeders.to_s.empty? ? 1 : seeders).to_i
     end
     
     # Is the torrent valid?
@@ -87,10 +91,10 @@ module Container
     #   => starts or ends with whitespace
     # Returns {true} or {false}
     def valid?
-      [:details, :torrent, :title, :seeders].each do |method|
-        data = self.send(method).to_s
-        return false if data.empty? or data.match(/<\/?[^>]*>/) or data.strip != data
-      end; return true
+      [:details, :torrent, :title].each do |method|
+        data = self.send(method)
+        return false if self.send(method).nil? or data.to_s.empty? or data.to_s.match(/<\/?[^>]*>/) or data.to_s.strip != data.to_s
+      end; true
     end
     
     # Makes the ingoing url downloadable.
@@ -98,7 +102,7 @@ module Container
     # {url} (String) The url to escape
     # Returns an escaped url that should work using RestClient
     def downloadable(url)
-      @tracker["url"] + "/" + url.gsub(/#{@tracker["url"]}\//, "").gsub(/[^a-z\/]/i) { |m| CGI::escape(m) }
+      @tracker["url"] + "/" + url.gsub(/#{@tracker["url"]}\//, "").gsub(/[^a-z\/\(\)]/i) { |m| CGI::escape(m) }
     end
     
     # Downloads the detailed view for this torrent

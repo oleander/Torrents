@@ -1,5 +1,3 @@
-require '/Users/linus/Documents/Projekt/rchardet/lib/rchardet'
-require "iconv"
 module Trackers
   class ThePirateBay
     def details(tr)

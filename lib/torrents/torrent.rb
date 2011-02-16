@@ -2,7 +2,7 @@ module Container
   require "rest_client"
   require "nokogiri"
   require "torrents/trackers/the_pirate_bay"
-  require "rchardet"
+  require 'rchardet19'
   require "iconv"
     
   class Shared      

@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   
   s.add_dependency('rest-client')
   s.add_dependency('nokogiri')
+  s.add_dependency('rchardet19')
   
   s.add_development_dependency('rspec')
   s.add_development_dependency('autotest-standalone')

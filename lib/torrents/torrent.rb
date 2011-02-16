@@ -5,18 +5,7 @@ module Container
   require "rchardet"
   require "iconv"
     
-  class Shared
-    
-    def initialize
-      @fallbacks = {
-        torrent: "",
-        torrents: [],
-        seeders: 1,
-        title: "",
-        details: ""
-      }
-    end
-        
+  class Shared      
     def self.debugger(value)
       @debug = value
     end

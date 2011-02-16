@@ -59,8 +59,7 @@ module Container
   end
   
   class Torrent < Shared
-    attr_accessor :details, :torrent, :title
-    include ThePirateBay
+    attr_accessor :details, :torrent, :title, :seeders
     
     def initialize(args)
       args.keys.each { |name| instance_variable_set "@" + name.to_s, args[name] }
@@ -72,21 +71,32 @@ module Container
       self.inner_call(:seeders, self.content).to_i <= 0
     end
     
+    # Is the torrent valid?
+    # The definition of valid:
+    #   Non of the accessors
+    #   => is nil
+    #   => contains htmltags
+    #   => starts or ends with whitespace
+    # Returns {true} or {false}
     def valid?
-      # [:details, :torrent, :title].each do |method|
-      #   return false if self.send(method).nil?
-      # end
-
-      return true
+      [:details, :torrent, :title, :seeders].each do |method|
+        data = self.send(method).to_s
+        return false if data.empty? or data.match(/<\/?[^>]*>/) or data.strip != data
+      end; return true
     end
     
-    protected
-      def downloadable(url)
-        @tracker["url"] + "/" + url.gsub(/#{@tracker["url"]}\//, '').gsub(/[^a-z\/]/i) { |m| CGI::escape(m) }
-      end
-      
-      def content
-        Nokogiri::HTML self.download(self.downloadable(self.details))
-      end
+    # Makes the ingoing url downloadable.
+    # Some info here: http://stackoverflow.com/questions/4999322/escape-and-download-url-using-ruby
+    # {url} (String) The url to escape
+    # Returns an escaped url that should work using RestClient
+    def downloadable(url)
+      @tracker["url"] + "/" + url.gsub(/#{@tracker["url"]}\//, '').gsub(/[^a-z\/]/i) { |m| CGI::escape(m) }
+    end
+    
+    # Downloads the detailed view for this torrent
+    # Returns an Nokogiri object
+    def content
+      Nokogiri::HTML self.download(self.downloadable(@details))
+    end
   end
 end

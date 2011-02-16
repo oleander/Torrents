@@ -1,22 +1,22 @@
 module Container
-  require 'rest_client'
-  require 'nokogiri'
-  require 'torrents/trackers/the_pirate_bay'
-  require '/Users/linus/Documents/Projekt/rchardet/lib/rchardet'
+  require "rest_client"
+  require "nokogiri"
+  require "torrents/trackers/the_pirate_bay"
+  require "/Users/linus/Documents/Projekt/rchardet/lib/rchardet"
   require "iconv"
   
   class Shared
     
     # Downloads the URL, returns an empty string if an error occurred
     # Here we try to convert the downloaded content to UTF8, 
-    # if we're at least 60% sure that the content that was downloaded actally is was we think
+    # if we"re at least 60% sure that the content that was downloaded actally is was we think
     # The timeout is set to 10 seconds, after that time, an empty string will be returned 
     # {url} (String) The URL to download
     def download(url)
       begin
         data = RestClient.get url, {:timeout => 10}
         cd = CharDet.detect(data)
-        return (cd['confidence'] > 0.6) ? Iconv.conv(cd['encoding'], "UTF-8", data) : data
+        return (cd["confidence"] > 0.6) ? Iconv.conv(cd["encoding"], "UTF-8", data) : data
       rescue
         self.error("Something when wrong when trying to fetch #{url}", "")
       end; ""
@@ -26,7 +26,7 @@ module Container
     # This is only being called when trying to download or when trying to parse a page
     # {messages} (String) The custom error to the user
     # {error} (Exception) The actual error that was thrown
-    # TODO: Don't print any errors if the debuger is set to {false}
+    # TODO: Don"t print any errors if the debuger is set to {false}
     def error(messages, error = "")
       messages = messages.class == Array ? messages : [messages]
       STDERR.puts "The Torrent Gem"
@@ -37,7 +37,7 @@ module Container
     
     # A middle caller that can handle errors for external trackers
     # If the tracker that is being loaded in {load} craches, 
-    # then this makes sure that the entire application won't crash
+    # then this makes sure that the entire application won"t crash
     # {method} (Hash) The method that is being called inside the trackers module
     # {tr} (Nokogiri) The object that contains the HTML content of the current row
     # TODO: Return a default value if the method raises an exception, 
@@ -90,7 +90,7 @@ module Container
     # {url} (String) The url to escape
     # Returns an escaped url that should work using RestClient
     def downloadable(url)
-      @tracker["url"] + "/" + url.gsub(/#{@tracker["url"]}\//, '').gsub(/[^a-z\/]/i) { |m| CGI::escape(m) }
+      @tracker["url"] + "/" + url.gsub(/#{@tracker["url"]}\//, "").gsub(/[^a-z\/]/i) { |m| CGI::escape(m) }
     end
     
     # Downloads the detailed view for this torrent

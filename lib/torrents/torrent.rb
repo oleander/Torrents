@@ -5,7 +5,21 @@ module Container
   require "/Users/linus/Documents/Projekt/rchardet/lib/rchardet"
   require "iconv"
   
+
+
+    
   class Shared
+    
+    def initialize
+      @fallbacks = {
+        torrent: "",
+        torrents: [],
+        seeders: 1,
+        title: "",
+        details: ""
+      }
+    end
+        
     def self.debugger(value)
       @debug = value
     end
@@ -49,7 +63,13 @@ module Container
         return self.load.send(method, (tr.class == Array ? tr.first : tr))
       rescue
         self.error("{inner_call} An error in the #{method} method occurred", $!)
-      end; ""
+      end; {
+        torrent: "",
+        torrents: [],
+        seeders: 1,
+        title: "",
+        details: ""
+      }[method]
     end
     
     # Creating a singleton of the {tracker} class

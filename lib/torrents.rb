@@ -77,7 +77,8 @@ class Torrents < Container::Shared
   
   protected
     def torrents
-      self.content.css(@current["css"]["tr"]).each do |tr|
+      return @torrents if @torrents.any?
+      self.inner_torrents(self.content).each do |tr|
         torrent = Container::Torrent.new({
           details: self.inner_details(tr),
           torrent: self.inner_torrent(tr),

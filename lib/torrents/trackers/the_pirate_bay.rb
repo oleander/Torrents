@@ -17,5 +17,9 @@ module Trackers
     def seeders(details)
       details.to_s.match(/.+<dd>(\d+)<\/dd>/)[1].to_i
     end
+    
+    def torrents(site)
+      site.css('#searchResult tr')
+    end
   end
 end

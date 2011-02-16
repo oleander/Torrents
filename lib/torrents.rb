@@ -7,8 +7,12 @@ class Torrents < Container::Shared
   attr_accessor :page
   
   def initialize
-    @trackers = YAML::load(File.read('lib/torrents/trackers.yaml'))
+    @trackers = YAML::load(File.read('./lib/torrents/trackers.yaml'))
     @torrents = []
+  end
+  
+  def results
+    self.torrents
   end
   
   def content
@@ -60,10 +64,7 @@ class Torrents < Container::Shared
   # If the user is trying to do some funky stuff to the data
   def method_missing(method, *args, &block)
     return self.inner_call($1, args) if method =~ /^inner_(.+)$/
-      
-    super(method, args, block) unless [].methods.include? method
-    
-    self.torrents.send(method)
+    super(method, args, block)
   end
   
   def self.method_missing(method, *args, &block)

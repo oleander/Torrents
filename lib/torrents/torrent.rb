@@ -6,6 +6,12 @@ module Container
   require "iconv"
   
   class Shared
+    
+    # Downloads the URL, returns an empty string if an error occurred
+    # Here we try to convert the downloaded content to UTF8, 
+    # if we're at least 60% sure that the content that was downloaded actally is was we think
+    # The timeout is set to 10 seconds, after that time, an empty string will be returned 
+    # {url} (String) The URL to download
     def download(url)
       begin
         data = RestClient.get url, {:timeout => 10}
@@ -13,11 +19,14 @@ module Container
         return (cd['confidence'] > 0.6) ? Iconv.conv(cd['encoding'], "UTF-8", data) : data
       rescue
         self.error("Something when wrong when trying to fetch #{url}", "")
-      end
-      # We do not want the application to crash, there for we return a parseable string
-      return ""
+      end; ""
     end
     
+    # Prints a nice(er) error to the console if something went wrong
+    # This is only being called when trying to download or when trying to parse a page
+    # {messages} (String) The custom error to the user
+    # {error} (Exception) The actual error that was thrown
+    # TODO: Don't print any errors if the debuger is set to {false}
     def error(messages, error = "")
       messages = messages.class == Array ? messages : [messages]
       STDERR.puts "The Torrent Gem"
@@ -26,17 +35,27 @@ module Container
       STDERR.puts "\n\n"
     end
     
+    # A middle caller that can handle errors for external trackers
+    # If the tracker that is being loaded in {load} craches, 
+    # then this makes sure that the entire application won't crash
+    # {method} (Hash) The method that is being called inside the trackers module
+    # {tr} (Nokogiri) The object that contains the HTML content of the current row
+    # TODO: Return a default value if the method raises an exception, 
+    #       the empty string does not work in all cases
     def inner_call(method, tr)
-      #begin
-        return self.send(method, tr.first)
-      #rescue
-      #  STDERR.puts "An error in the #{method} method occurred"
-      #  STDERR.puts "==> \t#{$!.inspect}"
-      #end
-      
-      #return ""
+      begin
+        return self.load.send(method, (tr.class == Array ? tr : [tr]))
+      rescue
+        STDERR.puts "{inner_call} An error in the #{method} method occurred"
+        STDERR.puts "==> \t#{$!.inspect}"
+      end; "" # Se till alla ladda ett default-värde baserat på vilken metod det är som annropas
     end
     
+    # Creating a singleton of the {tracker} class
+    # {tracker} (String) The tracker to load
+    def load(tracker = nil)
+      @load ||= Trackers::ThePirateBay.new
+    end
   end
   
   class Torrent < Shared
@@ -54,9 +73,9 @@ module Container
     end
     
     def valid?
-      [:details, :torrent, :title].each do |method|
-        return false if self.send(method).nil?
-      end
+      # [:details, :torrent, :title].each do |method|
+      #   return false if self.send(method).nil?
+      # end
 
       return true
     end

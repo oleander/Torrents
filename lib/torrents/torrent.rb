@@ -67,10 +67,14 @@ module Container
     
     # Is the torrent dead?
     # The definition of dead is; no seeders
+    # Returns a boolean
     def dead?
       self.seeders <= 0
     end
     
+    # Returns the amount of seeders for the current torrent
+    # If the seeder-tag isn't found, the value one (1) will be returned.
+    # Returns an integer from 0 to inf
     def seeders
       self.inner_call(:seeders, self.content).to_i
     end

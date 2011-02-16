@@ -2,9 +2,11 @@ require 'yaml'
 require 'rest_client'
 require 'nokogiri'
 require 'torrents/torrent'
+require 'torrents/trackers/the_pirate_bay'
 
 class Torrents < Container::Shared
   attr_accessor :page
+  include ThePirateBay
   
   def initialize
     @trackers = YAML::load(File.read('lib/torrents/trackers.yaml'))
@@ -54,6 +56,8 @@ class Torrents < Container::Shared
   
   # If the user is trying to do some funky stuff to the data
   def method_missing(method, *args, &block)
+    return self.inner_call($1, args) if method =~ /^inner_(.+)$/
+      
     super(method, args, block) unless [].methods.include? method
     
     self.torrents.send(method)
@@ -72,13 +76,13 @@ class Torrents < Container::Shared
     def torrents
       self.content.css(@current["css"]["tr"]).each do |tr|
         torrent = Container::Torrent.new({
-          details: self.append_url(tr.at_css(@current["css"]["details"]).attr('href')),
-          torrent: self.append_url(tr.to_s.match(/(http:\/\/.+\.torrent)/)[1]),
-          title: tr.at_css(@current["css"]["details"]).content,
+          details: self.inner_details(tr), # self.append_url(tr.at_css(@current["css"]["details"]).attr('href')),
+          torrent: self.inner_torrent(tr), #self.append_url(tr.to_s.match(/(http:\/\/.+\.torrent)/)[1]),
+          title: self.inner_torrent(tr), #tr.at_css(@current["css"]["details"]).content,
           tracker: @current
-        }) rescue nil
+        })
         
-        @torrents << torrent unless torrent.nil?
+        @torrents << torrent if torrent.valid?
       end; return @torrents
     end
     

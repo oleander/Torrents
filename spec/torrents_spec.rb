@@ -77,7 +77,7 @@ describe Torrents do
   it "should not contain any html tags" do
     
     Torrents.the_pirate_bay.search("chuck").to_a.each do |torrent|
-      [:details, :torrent, :title, :seeders, :dead?].each do |method|
+      [:details, :torrent, :title, :dead?].each do |method|
         torrent.send(method).to_s.should_not match(/<\/?[^>]*>/)
       end
     end

@@ -8,10 +8,10 @@ def debugger
 end
 
 def rest_client(url, file = "recent")
-  mock(RestClient).should_receive(:get).with(url, {:timeout => 10}).any_number_of_times.and_return(File.read("spec/data/the_pirate_bay/#{file}.html"))
+  RestClient.should_receive(:get).with(url, {:timeout => 10}).at_least(1).times.and_return(File.read("spec/data/the_pirate_bay/#{file}.html"))
 end
 
-describe Torrents do
+describe Torrents do  
   it "should contain the right type when trying to do a search" do
     rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
     torrents = Torrents.the_pirate_bay.debugger(debugger).search("chuck").results
@@ -26,7 +26,7 @@ describe Torrents do
   
   it "should contain the right type when trying to do fetch the most recent torrent" do
     rest_client("http://thepiratebay.org/recent/1")
-    torrents = Torrents.the_pirate_bay.debugger(debugger).results
+    torrents = Torrents.the_pirate_bay.page(1).debugger(debugger).results
     torrents.each do |torrent|
       torrent.details.should be_instance_of(String)
       torrent.title.should be_instance_of(String)
@@ -97,5 +97,10 @@ describe Torrents do
          torrent.send(method).to_s.should_not match(/<\/?[^>]*>/)
        end
      end
+   end
+   
+   it "should not return anything if noting is being downloaded" do
+     rest_client("http://thepiratebay.org/search/chuck/0/99/0", "empty")
+     Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.should be_empty
    end
 end

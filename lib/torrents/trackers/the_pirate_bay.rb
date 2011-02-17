@@ -19,5 +19,14 @@ module Trackers
     def torrents(site)
       site.css('#searchResult tr')
     end
+    
+    def search_url(d)
+      "/search/<SEARCH>/<PAGE>/99/0"
+    end
+    
+    def recent_url(d)
+      "/recent/<PAGE>"
+    end
+    
   end
 end

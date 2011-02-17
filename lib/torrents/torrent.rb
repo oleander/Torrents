@@ -17,7 +17,7 @@ module Container
     # {url} (String) The URL to download
     def download(url)
       begin
-        data = RestClient.get url, {:timeout => 10}
+        data = RestClient.get self.url_cleaner(url), {:timeout => 10}
         cd = CharDet.detect(data)
         return (cd["confidence"] > 0.6) ? (Iconv.conv(cd["encoding"] + "//IGNORE", "UTF-8", data) rescue data) : data
       rescue
@@ -33,10 +33,10 @@ module Container
     def error(messages, error = "")
       return unless @debug
       messages = messages.class == Array ? messages : [messages]
-      STDERR.puts "The Torrent Gem"
-      STDERR.puts "==>\t" + messages.join("\n\t")
-      STDERR.puts "==>\t" + error.inspect
-      STDERR.puts "\n\n"
+      warn "An error in the Torrents gem occurred"
+      warn "==> " + messages.join("\n\t")
+      warn "==> " + error.inspect[0..50] + " ..."
+      warn "\n\n"
     end
     
     # A middle caller that can handle errors for external trackers
@@ -44,9 +44,10 @@ module Container
     # then this makes sure that the entire application won"t crash
     # {method} (Hash) The method that is being called inside the trackers module
     # {tr} (Nokogiri | [Nokogiri]) The object that contains the HTML content of the current row
-    def inner_call(method, tr)
+    def inner_call(method, tr = nil)
       begin
-        return self.load.send(method, (tr.class == Array ? tr.first : tr))
+        x = self.load.send(method, (tr.class == Array ? tr.first : tr))
+        return x
       rescue
         self.error("{inner_call} An error in the #{method} method occurred", $!)
       end; {
@@ -62,6 +63,10 @@ module Container
     # {tracker} (String) The tracker to load
     def load(tracker = nil)
       @load ||= Trackers::ThePirateBay.new
+    end
+    
+    def url_cleaner(url)
+      url.gsub(/\{|\}|\||\\|\^|\[|\]|\`|\s+/) { |m| CGI::escape(m) }
     end
   end
   
@@ -103,18 +108,10 @@ module Container
       end; true
     end
     
-    # Makes the ingoing url downloadable.
-    # Some info here: http://stackoverflow.com/questions/4999322/escape-and-download-url-using-ruby
-    # {url} (String) The url to escape
-    # Returns an escaped url that should work using RestClient
-    def downloadable(url)
-      @tracker["url"] + "/" + url.gsub(/#{@tracker["url"]}\//, "").gsub(/[^a-z\/\(\)]/i) { |m| CGI::escape(m) }
-    end
-    
     # Downloads the detailed view for this torrent
     # Returns an Nokogiri object
     def content
-      @content ||= Nokogiri::HTML self.download(self.downloadable(@details))
+      @content ||= Nokogiri::HTML self.download(@details)
     end
   end
 end

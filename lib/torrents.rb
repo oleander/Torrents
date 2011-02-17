@@ -9,6 +9,8 @@ class Torrents < Container::Shared
   def initialize
     @trackers = YAML::load(File.read('./lib/torrents/trackers.yaml'))
     @torrents = []
+    @search_type = :inner_recent_url
+    @search_value = ""
   end
   
   def results
@@ -23,15 +25,9 @@ class Torrents < Container::Shared
   def inner_page
     (@page ||= @current["start_page_index"]).to_s
   end
-  
+
   def url
-    if @search_value
-      pend = @current["search"].gsub('<SEARCH>', @search_value).gsub('<PAGE>', self.inner_page)
-    else 
-      pend = @current["recent"].gsub('<PAGE>', self.inner_page)
-    end
-    
-    @current["url"] + pend
+    @current["url"] + self.send(@search_type).gsub('<SEARCH>', @search_value).gsub('<PAGE>', self.inner_page)
   end
   
   # Does the trackers exists in the trackers file?
@@ -58,6 +54,7 @@ class Torrents < Container::Shared
   # Set the search value
   def search(value)
     @search_value = value
+    @search_type = :inner_search_url
     return self
   end
   

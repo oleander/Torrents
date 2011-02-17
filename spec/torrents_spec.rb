@@ -4,7 +4,7 @@ def valid_url
 end
 
 def debugger
-  false
+  true
 end
 
 def rest_client(url, file = "recent")
@@ -66,41 +66,45 @@ describe Torrents do
      details.should match(valid_url)
    end
    
-   it "should contain a torrent url" do
-     rest_client("http://thepiratebay.org/recent/1")
-     torrent = Torrents.the_pirate_bay.debugger(debugger).page(1).results.first.torrent
-     torrent.should match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
-     torrent.should match(valid_url)
-   end
+    it "should contain a torrent url" do
+      rest_client("http://thepiratebay.org/recent/1")
+      torrent = Torrents.the_pirate_bay.debugger(debugger).page(1).results.first.torrent
+      torrent.should match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
+      torrent.should match(valid_url)
+    end
+    
+    it "should contain a title without html tags" do
+      rest_client("http://thepiratebay.org/recent/1")
+      Torrents.the_pirate_bay.debugger(debugger).page(1).results.first.title.should_not match(/<\/?[^>]*>/)
+    end
    
-   it "should contain a title without html tags" do
-     rest_client("http://thepiratebay.org/recent/1")
-     Torrents.the_pirate_bay.debugger(debugger).page(1).results.first.title.should_not match(/<\/?[^>]*>/)
-   end
-  
-   it "should contain the right instances" do
-     rest_client("http://thepiratebay.org/recent/1")
-     Torrents.the_pirate_bay.debugger(debugger).page(1).results.first.should be_instance_of(Container::Torrent)
-   end
-   
-   it "should be possible to search for a string, for real" do
-     rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
-     Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.first.details.should match(/\d+/)
-     Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.last.details.should match(/\d+/)    
-     Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.count.should eq(30)
-   end
-   
-   it "should not contain any html tags" do
-     rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
-     Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.each do |torrent|
-       [:details, :torrent, :title, :dead?, :seeders].each do |method|
-         torrent.send(method).to_s.should_not match(/<\/?[^>]*>/)
-       end
-     end
-   end
-   
-   it "should not return anything if noting is being downloaded" do
-     rest_client("http://thepiratebay.org/search/chuck/0/99/0", "empty")
-     Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.should be_empty
-   end
+    it "should contain the right instances" do
+      rest_client("http://thepiratebay.org/recent/1")
+      Torrents.the_pirate_bay.debugger(debugger).page(1).results.first.should be_instance_of(Container::Torrent)
+    end
+    
+    it "should be possible to search for a string, for real" do
+      rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
+      Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.first.details.should match(/\d+/)
+      Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.last.details.should match(/\d+/)    
+      Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.count.should eq(30)
+    end
+    
+    it "should not contain any html tags" do
+      rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
+      Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.each do |torrent|
+        [:details, :torrent, :title, :dead?, :seeders].each do |method|
+          torrent.send(method).to_s.should_not match(/<\/?[^>]*>/)
+        end
+      end
+    end
+    
+    it "should not return anything if noting is being downloaded" do
+      rest_client("http://thepiratebay.org/search/chuck/0/99/0", "empty")
+      Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.should be_empty
+    end
+    
+    it "should be possible to search for a string containing whitespace" do
+      Torrents.the_pirate_bay.debugger(debugger).search("die hard").should have(30).results
+    end
 end

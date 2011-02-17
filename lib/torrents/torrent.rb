@@ -5,7 +5,12 @@ module Container
   require 'rchardet19'
   require "iconv"
     
-  class Shared      
+  class Shared
+    
+    # Are we going to print warnings for the application?
+    # This is offen set to {true} when running the tests.
+    # It should be set to {false} in production.
+    # {value} Boolean Are we going to print any warnings      
     def self.debugger(value)
       @debug = value
     end
@@ -29,7 +34,6 @@ module Container
     # This is only being called when trying to download or when trying to parse a page
     # {messages} (String) The custom error to the user
     # {error} (Exception) The actual error that was thrown
-    # TODO: Don"t print any errors if the debuger is set to {false}
     def error(messages, error = "")
       return unless @debug
       messages = messages.class == Array ? messages : [messages]
@@ -65,6 +69,12 @@ module Container
       @load ||= Trackers::ThePirateBay.new
     end
     
+    # Cleans up the URL
+    # The ingoing param to the {open | RestClient} method can handle the special characters below.
+    # The only way to download the content that the URL points to is to escape those characters.
+    # Read more about it here => http://stackoverflow.com/questions/4999322/escape-and-download-url-using-ruby
+    # {url} (String) The url to escape
+    # Returns an escaped string
     def url_cleaner(url)
       url.gsub(/\{|\}|\||\\|\^|\[|\]|\`|\s+/) { |m| CGI::escape(m) }
     end

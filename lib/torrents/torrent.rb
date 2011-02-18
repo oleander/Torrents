@@ -4,10 +4,10 @@ module Container
   require 'rchardet19'
   require "iconv"
   require "classify"
-  require "torrents/trackers/the_pirate_bay"
+  
    
   class Shared  
-   
+   require "torrents/trackers/the_pirate_bay"
     include ::Trackers
     # Downloads the URL, returns an empty string if an error occurred
     # Here we try to convert the downloaded content to UTF8, 

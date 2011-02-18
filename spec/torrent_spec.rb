@@ -32,8 +32,14 @@ describe Container::Torrent do
   end
   
   it "should have a working valid? method" do
-    create_torrent({details: "", torrent: "", title: "", tracker: "", seeders: 1}).should_not be_valid
-    create_torrent({details: "a", torrent: "a", title: "a", tracker: "a", seeders: 1}).should be_valid
-    create_torrent({details: "a", torrent: "a", title: "a", tracker: "a", seeders: nil}).should_not be_valid
+    ["a", "a", ""].permutation.to_a.uniq.each do |invalid|
+      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+    end
+    
+    ["a", "a", nil].permutation.to_a.uniq.each do |invalid|
+      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+    end
+    
+    create_torrent({details: "a", torrent: "a", title: "a", tracker: "a"}).should be_valid
   end
 end

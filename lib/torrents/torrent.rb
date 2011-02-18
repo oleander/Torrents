@@ -48,13 +48,16 @@ module Container
         return (arguments == 0) ? self.load.send(method) : self.load.send(method, tr)
       rescue
         self.error("{inner_call} An error in the #{method} method occurred", $!)
-      end; {
-        torrent: "",
-        torrents: [],
-        seeders: 1,
-        title: "",
-        details: ""
-      }[method] || ""
+      end
+      
+      return self.default_values(method)
+    end
+    
+    # Returns default value if any of the below methods (:details for example) return an exception.
+    # If the method for some reason isn't implemented (is not in the hash below), then it will return an empty string
+    # {method} (Hash) The method that raised an exception 
+    def default_values(method)
+      {torrent: "", torrents: [], seeders: 1, title: "", details: ""}[method] || ""
     end
     
     # Creating a singleton of the {tracker} class

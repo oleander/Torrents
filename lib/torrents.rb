@@ -1,4 +1,3 @@
-require 'yaml'
 require 'rest_client'
 require 'nokogiri'
 require 'torrents/torrent'

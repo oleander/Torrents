@@ -38,14 +38,13 @@ module Container
     end
     
     # A middle caller that can handle errors for external trackers
-    # If the tracker that is being loaded in {load} craches, 
-    # then this makes sure that the entire application won"t crash
+    # If the tracker that is being loaded in {load} crashes, 
+    # then this method makes sure that the entire application won"t crash
     # {method} (Hash) The method that is being called inside the trackers module
     # {tr} (Nokogiri | [Nokogiri]) The object that contains the HTML content of the current row
     def inner_call(method, tr = nil)
       begin
-        arguments = self.load.method(method).arity
-        return (arguments == 0) ? self.load.send(method) : self.load.send(method, tr)
+        return tr.nil? ? self.load.send(method) : self.load.send(method, tr)
       rescue
         self.error("{inner_call} An error in the #{method} method occurred", $!)
       end

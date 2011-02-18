@@ -4,10 +4,10 @@ module Container
   require 'rchardet19'
   require "iconv"
   require "classify"
+  Dir["lib/torrents/trackers/*.rb"].each {|rb| require "./#{rb}"}
   
-   
-  class Shared  
-   require "torrents/trackers/the_pirate_bay"
+  class Shared
+    include Trackers
     
     # Downloads the URL, returns an empty string if an error occurred
     # Here we try to convert the downloaded content to UTF8, 
@@ -59,7 +59,6 @@ module Container
     
     # Creating a singleton of the {tracker} class
     def load
-      include ::Trackers
       @load ||= eval("#{Classify.new.camelize(@tracker)}.new")
     end
     

@@ -21,13 +21,16 @@ module Container
         return (cd["confidence"] > 0.6) ? (Iconv.conv(cd["encoding"] + "//IGNORE", "UTF-8", data) rescue data) : data
       rescue
         self.error("Something when wrong when trying to fetch #{url}", $!)
-      end; ""
+      end
+      
+      return "" # The default value, if {RestClient} for some reason craches (like wrong encoding)
     end
     
     # Prints a nice(er) error to the console if something went wrong
     # This is only being called when trying to download or when trying to parse a page
     # {messages} (String) The custom error to the user
     # {error} (Exception) The actual error that was thrown
+    # TODO: Implement a real logger => http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/classes/Logger.html
     def error(messages, error = "")
       return unless @debug
       messages = messages.class == Array ? messages : [messages]

@@ -6,7 +6,7 @@ describe Container::Torrent do
       details: "http://thepiratebay.org/torrent/6173093/",
       torrent: "http://torrents.thepiratebay.org/6173093/value.torrent",
       title: "The title",
-      tracker: YAML::load(File.read('lib/torrents/trackers.yaml'))["the_pirate_bay"]
+      tracker: "the_pirate_bay"
     })
   end
   

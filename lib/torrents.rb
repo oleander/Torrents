@@ -47,7 +47,7 @@ class Torrents < Container::Shared
   end
   
   def debugger(value)
-    Container::Shared.debugger(@debug = value)
+    @debug = value
     return self
   end
   

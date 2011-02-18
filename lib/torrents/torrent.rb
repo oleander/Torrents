@@ -5,16 +5,7 @@ module Container
   require 'rchardet19'
   require "iconv"
     
-  class Shared
-    
-    # Are we going to print warnings for the application?
-    # This is offen set to {true} when running the tests.
-    # It should be set to {false} in production.
-    # {value} Boolean Are we going to print any warnings      
-    def self.debugger(value)
-      @debug = value
-    end
-    
+  class Shared  
     # Downloads the URL, returns an empty string if an error occurred
     # Here we try to convert the downloaded content to UTF8, 
     # if we"re at least 60% sure that the content that was downloaded actally is was we think

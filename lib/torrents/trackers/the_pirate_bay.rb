@@ -13,7 +13,7 @@ module Trackers
     end
   
     def seeders(details)
-      details.to_s.match(/.+<dd>(\d+)<\/dd>/)[1].to_i
+      details.to_s.match(/.+<dd>(\d+)<\/dd>/)[1]
     end
     
     def torrents(site)
@@ -21,11 +21,11 @@ module Trackers
     end
     
     def search_url
-      "/search/<SEARCH>/<PAGE>/99/0"
+      "http://thepiratebay.org/search/<SEARCH>/<PAGE>/99/0"
     end
     
     def recent_url
-      "/recent/<PAGE>"
+      "http://thepiratebay.org/recent/<PAGE>"
     end
     
   end

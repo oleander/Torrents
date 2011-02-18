@@ -27,7 +27,7 @@ class Torrents < Container::Shared
   end
 
   def url
-    @current["url"] + self.send(@search_type).gsub('<SEARCH>', @search_value).gsub('<PAGE>', self.inner_page)
+    self.send(@search_type).gsub('<SEARCH>', @search_value).gsub('<PAGE>', self.inner_page)
   end
   
   # Does the trackers exists in the trackers file?

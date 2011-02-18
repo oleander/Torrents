@@ -36,24 +36,20 @@ class Torrents < Container::Shared
   
   # Makes this the {tracker} tracker
   def add(tracker)
-    @tracker = tracker.to_s
-    return self
+    @tracker = tracker.to_s; self
   end
   
   def page(value)
-    @page = value
-    return self
+    @page = value; self
   end
   
   def debugger(value)
-    @debug = value
-    return self
+    @debug = value; self
   end
   
   # Set the search value
   def search(value)
-    @search.merge!(:type => :inner_search_url, :value => value)
-    return self
+    @search.merge!(:type => :inner_search_url, :value => value); self
   end
   
   # If the user is trying to do some funky stuff to the data

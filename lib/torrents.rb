@@ -7,7 +7,6 @@ class Torrents < Container::Shared
   attr_accessor :page
   
   def initialize
-    @trackers = YAML::load(File.read('./lib/torrents/trackers.yaml'))
     @torrents = []
     @search_type = :inner_recent_url
     @search_value = ""
@@ -17,28 +16,26 @@ class Torrents < Container::Shared
     self.torrents
   end
   
+  def exists?(tracker)
+    File.exists?(File.dirname(File.expand_path( __FILE__)) + "/torrents/trackers/" + tracker.to_s + ".rb")
+  end
+  
   def content
     Nokogiri::HTML self.download(self.url)
   end
   
   # Set the default page
   def inner_page
-    (@page ||= @current["start_page_index"]).to_s
+    (@page ||= self.inner_start_page_index).to_s
   end
 
   def url
     self.send(@search_type).gsub('<SEARCH>', @search_value).gsub('<PAGE>', self.inner_page)
   end
   
-  # Does the trackers exists in the trackers file?
-  def exists?(site)
-    ! @trackers[site.to_s].nil?
-  end
-  
   # Makes this the {tracker} tracker
   def add(tracker)
     @tracker = tracker.to_s
-    @current = @trackers[tracker.to_s]
     return self
   end
   
@@ -82,7 +79,6 @@ class Torrents < Container::Shared
           details: self.inner_details(tr),
           torrent: self.inner_torrent(tr),
           title: self.inner_torrent(tr),
-          tracker: @current,
           debug: @debug
         })
         

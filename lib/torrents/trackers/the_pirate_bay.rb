@@ -28,5 +28,8 @@ module Trackers
       "http://thepiratebay.org/recent/<PAGE>"
     end
     
+    def start_page_index
+      0
+    end
   end
 end

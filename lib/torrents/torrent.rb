@@ -8,7 +8,6 @@ module Container
   
   class Shared
     include Trackers
-    
     # Downloads the URL, returns an empty string if an error occurred
     # Here we try to convert the downloaded content to UTF8, 
     # if we"re at least 60% sure that the content that was downloaded actally is was we think

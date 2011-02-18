@@ -109,7 +109,7 @@ module Container
     #   => starts or ends with whitespace
     # Returns {true} or {false}
     def valid?
-      [:details, :torrent, :title].each do |method|
+      [:details, :torrent, :title, :seeders].each do |method|
         data = self.send(method)
         return false if self.send(method).nil? or data.to_s.empty? or data.to_s.match(/<\/?[^>]*>/) or data.to_s.strip != data.to_s
       end; true

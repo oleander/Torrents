@@ -37,6 +37,7 @@ class Torrents < Container::Shared
   
   # Makes this the {tracker} tracker
   def add(tracker)
+    @tracker = tracker.to_s
     @current = @trackers[tracker.to_s]
     return self
   end

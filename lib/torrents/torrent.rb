@@ -1,11 +1,14 @@
 module Container
   require "rest_client"
   require "nokogiri"
-  require "torrents/trackers/the_pirate_bay"
   require 'rchardet19'
   require "iconv"
-    
+  require "classify"
+  require "torrents/trackers/the_pirate_bay"
+   
   class Shared  
+   
+    include ::Trackers
     # Downloads the URL, returns an empty string if an error occurred
     # Here we try to convert the downloaded content to UTF8, 
     # if we"re at least 60% sure that the content that was downloaded actally is was we think
@@ -55,9 +58,8 @@ module Container
     end
     
     # Creating a singleton of the {tracker} class
-    # {tracker} (String) The tracker to load
-    def load(tracker = nil)
-      @load ||= Trackers::ThePirateBay.new
+    def load
+      @load ||= eval("#{Classify.new.camelize(@tracker)}.new")
     end
     
     # Cleans up the URL
@@ -76,7 +78,6 @@ module Container
     
     def initialize(args)
       args.keys.each { |name| instance_variable_set "@" + name.to_s, args[name] }
-      Container::Shared.debugger(@debug)
     end
     
     # Is the torrent dead?

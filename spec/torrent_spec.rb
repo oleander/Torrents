@@ -30,4 +30,10 @@ describe Container::Torrent do
       end
     }.should_not raise_error(NoMethodError)
   end
+  
+  it "should not contain any whitespace in the beginning of end of a string" do
+    [:details, :torrent, :title, :seeders, :dead?].each do |method|
+      @torrent.send(method).to_s.should_not match(/^\s+.+\s+$/)
+    end
+  end
 end

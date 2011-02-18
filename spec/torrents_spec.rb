@@ -99,7 +99,7 @@ describe Torrents do
       end
     end
     
-    it "should not return anything if noting is being downloaded" do
+    it "should not return anything if nothing is being downloaded" do
       rest_client("http://thepiratebay.org/search/chuck/0/99/0", "empty")
       Torrents.the_pirate_bay.debugger(debugger).search("chuck").results.should be_empty
     end

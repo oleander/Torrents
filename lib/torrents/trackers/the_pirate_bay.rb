@@ -20,11 +20,11 @@ module Trackers
       site.css('#searchResult tr')
     end
     
-    def search_url(d)
+    def search_url
       "/search/<SEARCH>/<PAGE>/99/0"
     end
     
-    def recent_url(d)
+    def recent_url
       "/recent/<PAGE>"
     end
     

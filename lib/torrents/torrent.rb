@@ -50,8 +50,8 @@ module Container
     # {tr} (Nokogiri | [Nokogiri]) The object that contains the HTML content of the current row
     def inner_call(method, tr = nil)
       begin
-        x = self.load.send(method, (tr.class == Array ? tr.first : tr))
-        return x
+        arguments = self.load.method(method).arity
+        return (arguments == 0) ? self.load.send(method) : self.load.send(method, tr)
       rescue
         self.error("{inner_call} An error in the #{method} method occurred", $!)
       end; {
@@ -60,7 +60,7 @@ module Container
         seeders: 1,
         title: "",
         details: ""
-      }[method]
+      }[method] || ""
     end
     
     # Creating a singleton of the {tracker} class

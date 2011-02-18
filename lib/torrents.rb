@@ -60,7 +60,7 @@ class Torrents < Container::Shared
   
   # If the user is trying to do some funky stuff to the data
   def method_missing(method, *args, &block)
-    return self.inner_call($1, args) if method =~ /^inner_(.+)$/
+    return self.inner_call($1, args.first) if method =~ /^inner_(.+)$/
     super(method, args, block)
   end
   
@@ -87,10 +87,5 @@ class Torrents < Container::Shared
         
         @torrents << torrent if torrent.valid?
       end; return @torrents
-    end
-    
-    # Appends the site url to the url if needed
-    def append_url(data)
-      data.match(/^http:\/\//) ? data : @current["url"] + data
     end
 end

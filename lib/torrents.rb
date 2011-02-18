@@ -7,8 +7,10 @@ class Torrents < Container::Shared
   
   def initialize
     @torrents = []
-    @search_type = :inner_recent_url
-    @search_value = ""
+    @search = {
+      type: :inner_recent_url,
+      value: ""
+    }
   end
   
   def results
@@ -29,7 +31,7 @@ class Torrents < Container::Shared
   end
 
   def url
-    self.send(@search_type).gsub('<SEARCH>', @search_value).gsub('<PAGE>', self.inner_page)
+    self.send(@search[:type]).gsub('<SEARCH>', @search[:value]).gsub('<PAGE>', self.inner_page)
   end
   
   # Makes this the {tracker} tracker
@@ -50,8 +52,7 @@ class Torrents < Container::Shared
   
   # Set the search value
   def search(value)
-    @search_value = value
-    @search_type = :inner_search_url
+    @search.merge!(:type => :inner_search_url, :value => value)
     return self
   end
   

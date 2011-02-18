@@ -4,7 +4,7 @@ def valid_url
 end
 
 def debugger
-  true
+  false
 end
 
 def rest_client(url, file = "recent")

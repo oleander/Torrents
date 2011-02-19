@@ -5,5 +5,14 @@ def rest_client(url, file = "recent")
 end
 
 describe Torrents do  
-
+  before(:each) do
+    @torrents = Torrents.new
+  end
+  
+  context "the exists? method" do
+    it "should know if a tracker exists or not" do
+      @torrents.exists?("the_pirate_bay").should be_true
+      @torrents.exists?("random").should be_false
+    end
+  end
 end

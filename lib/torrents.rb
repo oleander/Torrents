@@ -13,10 +13,6 @@ class Torrents < Container::Shared
     }
   end
   
-  def results
-    self.torrents
-  end
-  
   def exists?(tracker)
     File.exists?(File.dirname(File.expand_path( __FILE__)) + "/torrents/trackers/" + tracker.to_s + ".rb")
   end
@@ -67,18 +63,19 @@ class Torrents < Container::Shared
     return this.add(method)
   end
   
-  protected
-    def torrents
-      return @torrents if @torrents.any?
-      self.inner_torrents(self.content).each do |tr|
-        torrent = Container::Torrent.new({
-          details: self.inner_details(tr),
-          torrent: self.inner_torrent(tr),
-          title: self.inner_torrent(tr),
-          debug: @debug
-        })
-        
-        @torrents << torrent if torrent.valid?
-      end; return @torrents
+  def results
+    return @torrents if @torrents.any?
+    self.inner_torrents(self.content).each do |tr|
+      torrent = Container::Torrent.new({
+        details: self.inner_details(tr),
+        torrent: self.inner_torrent(tr),
+        title: self.inner_torrent(tr),
+        debug: @debug
+      })
+      
+      @torrents << torrent if torrent.valid?
     end
+    
+    return @torrents
+  end
 end

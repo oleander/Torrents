@@ -83,7 +83,7 @@ class Torrents < Container::Shared
       torrent = Container::Torrent.new({
         details: self.inner_details(tr),
         torrent: self.inner_torrent(tr),
-        title: self.inner_torrent(tr),
+        title: self.inner_title(tr),
         debug: @debug
       })
       

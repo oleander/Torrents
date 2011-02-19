@@ -18,6 +18,7 @@ describe Trackers::ThePirateBay do
     
     torrents.results.each do |torrent|
       torrent.title.should match(/chuck/i)
+      torrent.title.should_not eq(torrent.torrent)
     end
     
     torrents.should have(30).results

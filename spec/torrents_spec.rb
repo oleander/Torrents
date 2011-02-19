@@ -1,9 +1,5 @@
 require 'spec_helper'
 
-def rest_client(url, file = "recent")
-  RestClient.should_receive(:get).with(url, {:timeout => 10}).at_least(1).times.and_return(File.read("spec/data/the_pirate_bay/#{file}.html"))
-end
-
 describe Torrents do  
   before(:each) do
     @torrents = Torrents.new
@@ -115,6 +111,10 @@ describe Torrents do
       inner_torrents(50)
       Container::Torrent.should_receive(:new).any_number_of_times.and_return(torrent)
       torrent.should_receive(:valid?).any_number_of_times.and_return(true)
+    end
+    
+    before(:each) do
+      @torrents.should_receive(:content).and_return("")
     end
     
     it "should return an empty list" do

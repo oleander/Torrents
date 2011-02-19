@@ -45,7 +45,19 @@ describe Container::Torrent do
       create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
     end
     
-    create_torrent({details: "a", torrent: "a", title: "a", tracker: "a"}).should be_valid
+    ["a", "http://google.com", "a"].permutation.to_a.uniq.each do |invalid|
+      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+    end
+    
+    ["a", "http://google.com.torrent", "a"].permutation.to_a.uniq.each do |invalid|
+      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+    end
+    
+    ["a", "http://google.com", "a.torrent"].permutation.to_a.uniq.each do |invalid|
+      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+    end
+     
+    create_torrent({details: "http://google.com", torrent: "http://google.com.torrent", title: "a", tracker: "a"}).should be_valid
   end
   
   it "should be dead" do

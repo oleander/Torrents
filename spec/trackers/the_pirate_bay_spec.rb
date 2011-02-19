@@ -20,7 +20,6 @@ describe Trackers::ThePirateBay do
       torrent.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
       torrent.title.should match(/chuck/i)
       torrent.torrent.match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
-      torrent.should be_valid
     end
     
     torrents.should have(30).results
@@ -42,7 +41,6 @@ describe Trackers::ThePirateBay do
     torrents.results.each do |torrent|
       torrent.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
       torrent.torrent.match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
-      torrent.should be_valid
     end
   end
 end

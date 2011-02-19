@@ -62,6 +62,10 @@ class Torrents < Container::Shared
     }); self
   end
   
+  def cookies(args)
+    @cookies = args; self
+  end
+  
   # If the user is trying to do some funky stuff to the data
   def method_missing(method, *args, &block)
     return self.inner_call($1.to_sym, args.first) if method =~ /^inner_(.+)$/

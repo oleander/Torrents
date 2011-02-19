@@ -141,4 +141,11 @@ describe Torrents do
     end
   end
   
+  context "the cookies method" do
+    it "should be possible to pass some cookies" do
+      RestClient.should_receive(:get).with("http://thepiratebay.org/recent/0", {:timeout => 10}, {:cookies => {:session_id => "1234"}}).exactly(1).times.and_return("")
+      @torrents.cookies(:session_id => "1234").content
+    end
+  end
+  
 end

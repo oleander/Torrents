@@ -17,9 +17,7 @@ describe Trackers::ThePirateBay do
     torrents = Torrents.the_pirate_bay.search("chuck")
     
     torrents.results.each do |torrent|
-      torrent.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
       torrent.title.should match(/chuck/i)
-      torrent.torrent.match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
     end
     
     torrents.should have(30).results
@@ -36,11 +34,6 @@ describe Trackers::ThePirateBay do
   
   it "should be possible to list recent torrents" do
     rest_client("http://thepiratebay.org/recent/5", "recent")
-    torrents = Torrents.the_pirate_bay.page(5)
-    torrents.should have(30).results
-    torrents.results.each do |torrent|
-      torrent.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
-      torrent.torrent.match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
-    end
+    torrents = Torrents.the_pirate_bay.page(5).should have(30).results
   end
 end

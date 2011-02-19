@@ -35,4 +35,21 @@ describe Torrents do
       @torrents.inner_page.should eq("99")
     end
   end
+  
+  context "the url method" do
+    before(:each) do
+      @torrents.should_receive(:inner_page).and_return("3")
+    end
+    
+    it "should return the correct url when the searching" do
+      @torrents.search("search")
+      @torrents.should_receive(:send).and_return("before_<SEARCH>_middle_<PAGE>_after")
+      @torrents.url.should eq("before_search_middle_3_after")
+    end
+    
+    it "should work when not searching" do
+      @torrents.should_receive(:send).and_return("before_middle_<PAGE>_after")
+      @torrents.url.should eq("before_middle_3_after")
+    end
+  end
 end

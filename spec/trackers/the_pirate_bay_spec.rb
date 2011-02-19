@@ -34,4 +34,15 @@ describe Trackers::ThePirateBay do
     torrent.seeders.should eq(9383)
     torrent.should_not be_dead
   end
+  
+  it "should be possible to list recent torrents" do
+    rest_client("http://thepiratebay.org/recent/5", "recent")
+    torrents = Torrents.the_pirate_bay.page(5)
+    torrents.should have(30).results
+    torrents.results.each do |torrent|
+      torrent.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
+      torrent.torrent.match(/http:\/\/torrents\.thepiratebay\.org\/\d+\/.+\.torrent$/i)
+      torrent.should be_valid
+    end
+  end
 end

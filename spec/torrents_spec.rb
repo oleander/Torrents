@@ -72,6 +72,10 @@ describe Torrents do
   end
   
   context "the method_missing missing" do
+    before(:each) do
+      @torrent = mock(Object)
+    end
+    
     it "should call inner_call when calling method_missing" do
       @torrents.should_receive(:inner_call).with(:example, "a").and_return("b")
       @torrents.method_missing(:inner_example, "a").should eq("b")
@@ -82,12 +86,30 @@ describe Torrents do
         @torrents.method_missing(:example, "a")
       }.should raise_error(NoMethodError)
     end
+    
+    it "should also work with the static method" do
+      Torrents.should_receive(:new).and_return(@torrent)
+      @torrent.should_receive(:exists?).and_return(true)
+      @torrent.should_receive(:add).and_return("some")
+      Torrents.a_random_method.should eq("some")
+    end
+    
+    it "should also raise an exception" do
+      Torrents.should_receive(:new).and_return(@torrent)
+      @torrent.should_receive(:exists?).and_return(false)
+      lambda {
+        Torrents.a_random_method
+      }.should raise_error(Exception)
+    end
   end
 end
 
 
-# user is trying to do some funky stuff to the data
-# def method_missing(method, *args, &block)
-#   return self.inner_call($1, args.first) if method =~ /^inner_(.+)$/
-#   super(method, args, block)
-# end
+# def self.method_missing(method, *args, &block)
+#    this = Torrents.new
+#    # Raises an exception if the site isn't in the trackers.yaml file
+#    raise Exception.new("The site #{method} does not exist") unless this.exists?(method)
+#    
+#    # Yes, I like return :)
+#    return this.add(method)
+#  end

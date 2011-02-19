@@ -64,4 +64,17 @@ describe Container::Shared do
       @shared.default_values(:random).should eq("")
     end
   end
+  
+  context "the load method" do
+    before(:all) do
+      class Test < Container::Shared
+        def initialize
+          @tracker = "the_pirate_bay"
+        end
+      end
+    end
+    it "should create a new instance of any string" do
+      Test.new.load.should be_instance_of(Trackers::ThePirateBay)
+    end
+  end
 end

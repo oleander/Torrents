@@ -36,4 +36,9 @@ describe Trackers::ThePirateBay do
     rest_client("http://thepiratebay.org/recent/5", "recent")
     torrents = Torrents.the_pirate_bay.page(5).should have(30).results
   end
+  
+  it "should found 30 recent movies" do
+    rest_client("http://thepiratebay.org/browse/201/5/3", "movies")
+    torrents = Torrents.the_pirate_bay.page(5).category(:movies).should have(30).results
+  end
 end

@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Linus Oleander"]
   s.email       = ["linus@oleander.nu"]
-  s.homepage    = ""
+  s.homepage    = "https://github.com/oleander/Torrents"
   s.summary     = %q{Search and download torrents from your favorite bittorrent tracker}
   s.description = %q{Search and download torrents from your favorite bittorrent tracker using Ruby}
 

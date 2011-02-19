@@ -3,17 +3,18 @@ describe Trackers::ThePirateBay do
     RestClient.should_receive(:get).with(url, {:timeout => 10}).any_number_of_times.and_return(File.read("spec/data/the_pirate_bay/#{type}.html"))
   end
   
-  def valid_url
-    /(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/
-  end
-  
-  def debugger
-    false
+  def create_torrent
+    Container::Torrent.new({
+      details: "http://thepiratebay.org/torrent/6173093/", 
+      torrent: "http://torrents.thepiratebay.org/6173093/value.torrent", 
+      title: "The title", 
+      tracker: "the_pirate_bay" 
+    })
   end
   
   it "should only list torrents with the right title" do
     rest_client("http://thepiratebay.org/search/chuck/0/99/0", "search")
-    torrents = Torrents.the_pirate_bay.debugger(debugger).search("chuck")
+    torrents = Torrents.the_pirate_bay.search("chuck")
     
     torrents.results.each do |torrent|
       torrent.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+\/.+/i)
@@ -23,5 +24,14 @@ describe Trackers::ThePirateBay do
     end
     
     torrents.should have(30).results
+  end
+  
+  it "should be possible to parse the details view" do
+    rest_client("http://thepiratebay.org/torrent/6173093/", "details")
+    torrent = create_torrent
+    
+    torrent.should be_valid    
+    torrent.seeders.should eq(9383)
+    torrent.should_not be_dead
   end
 end

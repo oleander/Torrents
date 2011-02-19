@@ -22,7 +22,7 @@ module Container
         self.error("Something when wrong when trying to fetch #{url}", $!)
       end
       
-      # The default value, if {RestClient} for some reason craches (like wrong encoding)
+      # The default value, if {RestClient} for some reason craches (like wrong encoding or a timeout)
       return ""
     end
     

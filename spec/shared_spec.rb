@@ -52,4 +52,16 @@ describe Container::Shared do
       @shared.inner_call(:call).should eq("error")
     end
   end
+  
+  context "the default_values method" do
+    it "should return the right value" do
+      {torrent: "", torrents: [], seeders: 1, title: "", details: ""}.each do |method, value|
+        @shared.default_values(method).should eq(value)
+      end
+    end
+    
+    it "should return an empty string if the value isn't in the hash" do
+      @shared.default_values(:random).should eq("")
+    end
+  end
 end

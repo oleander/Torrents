@@ -77,7 +77,7 @@ describe Container::Torrent do
   
   it "should be able to cache requests" do
     torrent = create_torrent
-    RestClient.should_receive(:download).exactly(1).times.and_return("")
+    torrent.should_receive(:download).exactly(1).times.and_return("")
     10.times { torrent.seeders }
   end
 end

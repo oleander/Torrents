@@ -77,4 +77,25 @@ describe Container::Shared do
       Test.new.load.should be_instance_of(Trackers::ThePirateBay)
     end
   end
+  
+  context "the url_cleaner method" do
+    # Read more about the cleaner here
+    # http://stackoverflow.com/questions/4999322/escape-and-download-url-using-ruby
+    it "should be able to clean urls" do
+      list = {}
+      ["{", "}", "|", "\\", "^", "[", "]", "`", " a"].each do |c|
+        list.merge!("http://google.com/#{c}" => "http://google.com/#{CGI::escape(c)}")
+      end
+      
+      list.each do |url, clean|
+        lambda {
+          URI.parse(url)
+        }.should raise_error(URI::InvalidURIError)
+        
+        lambda {
+          URI.parse(@shared.url_cleaner(url)).to_s.should eq(clean)
+        }.should_not raise_error(URI::InvalidURIError)
+      end
+    end
+  end
 end

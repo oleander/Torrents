@@ -52,4 +52,10 @@ describe Torrents do
       @torrents.url.should eq("before_middle_3_after")
     end
   end
+  
+  context "the add method" do
+    it "should return self" do
+      @torrents.add("random").should be_instance_of(Torrents)
+    end
+  end
 end

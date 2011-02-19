@@ -102,14 +102,34 @@ describe Torrents do
       }.should raise_error(Exception)
     end
   end
+  
+  context "the results method" do
+    def inner_torrents(times)
+      list = []
+      times.times {list << 1}
+      @torrents.should_receive(:inner_torrents).exactly(1).times.and_return(list)
+    end
+    
+    def prepare
+      torrent = mock(Object)
+      inner_torrents(50)
+      Container::Torrent.should_receive(:new).any_number_of_times.and_return(torrent)
+      torrent.should_receive(:valid?).any_number_of_times.and_return(true)
+    end
+    
+    it "should return an empty list" do
+      inner_torrents(0)
+      @torrents.results.should be_empty
+    end
+    
+    it "should return a list with items" do
+      prepare
+      @torrents.should have(50).results
+    end
+    
+    it "should be able to cache torrents" do
+      prepare
+      5.times { @torrents.should have(50).results }
+    end
+  end
 end
-
-
-# def self.method_missing(method, *args, &block)
-#    this = Torrents.new
-#    # Raises an exception if the site isn't in the trackers.yaml file
-#    raise Exception.new("The site #{method} does not exist") unless this.exists?(method)
-#    
-#    # Yes, I like return :)
-#    return this.add(method)
-#  end

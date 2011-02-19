@@ -23,4 +23,16 @@ describe Torrents do
       @torrents.content.should be_instance_of(Nokogiri::HTML::Document)
     end
   end
+  
+  context "the inner_page method" do
+    it "should return the right value when using the setter method page" do
+      @torrents.page(3)
+      @torrents.inner_page.should eq("3")
+    end
+    
+    it "should return the pre defined value" do
+      @torrents.should_receive(:inner_start_page_index).and_return(99)
+      @torrents.inner_page.should eq("99")
+    end
+  end
 end

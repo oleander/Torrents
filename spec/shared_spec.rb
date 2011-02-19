@@ -44,12 +44,16 @@ describe Container::Shared do
     
     it "should call an example and rescue an exception" do
       @shared.should_receive(:load).and_return(lambda{
-        raise NoName.new
+        raise NoMethodError.new
       })
       
       @shared.should_receive(:error)
       @shared.should_receive(:default_values).with(:call).and_return("error")
       @shared.inner_call(:call).should eq("error")
+    end
+    
+    it "should only catch NoMethodError exception" do
+      
     end
   end
   

@@ -45,11 +45,13 @@ module Container
     # then this method makes sure that the entire application won"t crash
     # {method} (Hash) The method that is being called inside the trackers module
     # {tr} (Nokogiri | [Nokogiri]) The object that contains the HTML content of the current row
-    def inner_call(method, tr = nil)
+    def inner_call(method, option = nil)
       begin
-        return tr.nil? ? self.load.send(method) : self.load.send(method, tr)
-      rescue
-        self.error("{inner_call} An error in the #{method} method occurred", $!)
+        results = option.nil? ? self.load.send(method) : self.load.send(method, option)
+        raise NotImplementedError.new("#{option} is not implemented yet") if results.nil? and method == :category_url
+        return results
+      rescue NoMethodError => error
+        self.error("{inner_call} An error in the #{method} method occurred", error)
       end
       
       return self.default_values(method)

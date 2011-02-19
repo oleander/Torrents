@@ -7,9 +7,13 @@ class Torrents < Container::Shared
   
   def initialize
     @torrents = []
-    @search = {
-      type: :inner_recent_url,
-      value: ""
+    @url = {
+      callback: lambda { |obj|
+        obj.send(:inner_recent_url)
+      },
+      search: {
+        value: ""
+      }
     }
   end
   
@@ -27,7 +31,9 @@ class Torrents < Container::Shared
   end
 
   def url
-    self.send(@search[:type]).gsub('<SEARCH>', @search[:value]).gsub('<PAGE>', self.inner_page)
+    @url[:callback].call(self).
+      gsub('<SEARCH>', @url[:search][:value]).
+      gsub('<PAGE>', self.inner_page)
   end
   
   # Makes this the {tracker} tracker
@@ -45,7 +51,15 @@ class Torrents < Container::Shared
   
   # Set the search value
   def search(value)
-    @search.merge!(:type => :inner_search_url, :value => value); self
+    @url.merge!(:callback => lambda { |obj|
+      obj.send(:inner_search_url)
+    }, :search => {:value => value}); self
+  end
+  
+  def category(cat)
+    @url.merge!(:callback => lambda { |obj|
+      obj.send(:inner_category_url, cat)
+    }); self
   end
   
   # If the user is trying to do some funky stuff to the data

@@ -31,5 +31,9 @@ module Trackers
     def start_page_index
       0
     end
+    
+    def category_url(type)
+      {:movies => "http://thepiratebay.org/browse/201/<PAGE>/3"}[type]
+    end
   end
 end

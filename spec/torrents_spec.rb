@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Torrents do  
   before(:each) do
-    @torrents = Torrents.new
+    @torrents = Torrents.the_pirate_bay
   end
   
   context "the exists? method" do
@@ -33,19 +33,27 @@ describe Torrents do
   end
   
   context "the url method" do
-    before(:each) do
-      @torrents.should_receive(:inner_page).and_return("3")
-    end
-    
     it "should return the correct url when the searching" do
+      @torrents.should_receive(:inner_page).and_return("3")
       @torrents.search("search")
       @torrents.should_receive(:send).and_return("before_<SEARCH>_middle_<PAGE>_after")
       @torrents.url.should eq("before_search_middle_3_after")
     end
     
     it "should work when not searching" do
+      @torrents.should_receive(:inner_page).and_return("3")
       @torrents.should_receive(:send).and_return("before_middle_<PAGE>_after")
       @torrents.url.should eq("before_middle_3_after")
+    end
+    
+    it "should be possible to list torrents based on a category" do
+      @torrents.category(:movies).page(100).url.should eq("http://thepiratebay.org/browse/201/100/3")
+    end
+    
+    it "should raise an exception if trying to fetch a non existing category" do
+      lambda {
+        @torrents.category(:random).page(100).url
+      }.should raise_error(NotImplementedError)
     end
   end
   
@@ -132,4 +140,5 @@ describe Torrents do
       5.times { @torrents.should have(50).results }
     end
   end
+  
 end

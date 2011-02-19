@@ -53,7 +53,13 @@ describe Container::Shared do
     end
     
     it "should only catch NoMethodError exception" do
-      
+      lambda {
+        @shared.should_receive(:load).and_return(lambda{
+          raise Exception.new
+        })
+
+        @shared.inner_call(:call).should eq("error")
+      }.should raise_error(Exception)
     end
   end
   

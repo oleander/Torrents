@@ -50,7 +50,7 @@ class Torrents < Container::Shared
   
   # If the user is trying to do some funky stuff to the data
   def method_missing(method, *args, &block)
-    return self.inner_call($1, args.first) if method =~ /^inner_(.+)$/
+    return self.inner_call($1.to_sym, args.first) if method =~ /^inner_(.+)$/
     super(method, args, block)
   end
   

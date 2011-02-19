@@ -53,9 +53,41 @@ describe Torrents do
     end
   end
   
-  context "the add method" do
-    it "should return self" do
+  context "the add, page, debugger, search method" do
+    it "add" do
       @torrents.add("random").should be_instance_of(Torrents)
+    end
+    
+    it "page" do
+      @torrents.page("value").should be_instance_of(Torrents)
+    end
+    
+    it "debugger" do
+      @torrents.debugger("value").should be_instance_of(Torrents)
+    end
+    
+    it "search" do
+      @torrents.search("value").should be_instance_of(Torrents)
+    end
+  end
+  
+  context "the method_missing missing" do
+    it "should call inner_call when calling method_missing" do
+      @torrents.should_receive(:inner_call).with(:example, "a").and_return("b")
+      @torrents.method_missing(:inner_example, "a").should eq("b")
+    end
+    
+    it "should raise an exception" do
+      lambda {
+        @torrents.method_missing(:example, "a")
+      }.should raise_error(NoMethodError)
     end
   end
 end
+
+
+# user is trying to do some funky stuff to the data
+# def method_missing(method, *args, &block)
+#   return self.inner_call($1, args.first) if method =~ /^inner_(.+)$/
+#   super(method, args, block)
+# end

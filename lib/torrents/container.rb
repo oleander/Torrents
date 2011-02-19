@@ -146,12 +146,12 @@ module Container
       @content ||= Nokogiri::HTML self.download(@details)
     end
     
-    # Check so see if the ingoing param is a valid url or not
+    # Check to see if the ingoing param is a valid url or not
     def valid_url?(url)
       !! url.match(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i)
     end
     
-    # Check so see if the ingoing param is a valid torrent url or not
+    # Check to see if the ingoing param is a valid torrent url or not
     # The url has to be a valid url and has to end with .torrent
     def valid_torrent?(torrent)
       torrent.match(/\.torrent$/) and self.valid_url?(torrent)

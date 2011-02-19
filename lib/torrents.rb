@@ -80,12 +80,15 @@ class Torrents < Container::Shared
   def results
     return @torrents if @torrents.any?
     self.inner_torrents(self.content).each do |tr|
-      torrent = Container::Torrent.new({
+      
+      arguments = {
         details: self.inner_details(tr),
         torrent: self.inner_torrent(tr),
-        title: self.inner_title(tr).to_s.strip,
-        debug: @debug
-      })
+        title: self.inner_title(tr).to_s.strip
+      }
+      
+      arguments.merge!(:debug => @debug) if @debug
+      torrent = Container::Torrent.new(arguments)
       
       @torrents << torrent if torrent.valid?
     end

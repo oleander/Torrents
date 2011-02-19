@@ -1,6 +1,6 @@
 require 'rspec'
 require 'torrents'
-require 'torrents/torrent'
+require 'torrents/container'
 
 RSpec.configure do |config|
   config.mock_with :rspec

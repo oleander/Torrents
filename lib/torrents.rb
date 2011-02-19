@@ -1,6 +1,6 @@
 require 'rest_client'
 require 'nokogiri'
-require 'torrents/torrent'
+require 'torrents/container'
 
 class Torrents < Container::Shared
   attr_accessor :page

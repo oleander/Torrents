@@ -36,7 +36,7 @@ module Container
       messages = messages.class == Array ? messages : [messages]
       warn "An error in the Torrents gem occurred"
       warn "==> " + messages.join("\n\t")
-      warn "==> " + error.inspect[0..50] + " ..."
+      warn "==> " + error.inspect[0..60] + " ..."
       warn "\n\n"
     end
     
@@ -44,17 +44,16 @@ module Container
     # If the tracker that is being loaded in {load} crashes, 
     # then this method makes sure that the entire application won"t crash
     # {method} (Hash) The method that is being called inside the trackers module
-    # {tr} (Nokogiri | [Nokogiri]) The object that contains the HTML content of the current row
+    # {tr} (Nokogiri | Symbol) The object that contains the HTML content of the current row
     def inner_call(method, option = nil)
       begin
-        results = option.nil? ? self.load.send(method) : self.load.send(method, option)
-        raise NotImplementedError.new("#{option} is not implemented yet") if results.nil? and method == :category_url
-        return results
+        results = option.nil? ? self.load.send(method) : self.load.send(method, option) if self.valid_option?(method, option)
       rescue NoMethodError => error
-        self.error("{inner_call} An error in the #{method} method occurred", error)
+        self.error("An error in the #{@tracker} class at the #{method} method occurred", error)
+      ensure
+        raise NotImplementedError.new("#{option} is not implemented yet") if results.nil? and method == :category_url
+        return results.nil? ? self.default_values(method) : results
       end
-      
-      return self.default_values(method)
     end
     
     # Returns default value if any of the below methods (:details for example) return an exception.
@@ -69,6 +68,24 @@ module Container
       @load ||= eval("#{Classify.new.camelize(@tracker)}.new")
     end
     
+    # Check to see if the ingoing arguments to the tracker if valid.
+    # If something goes wrong after the parser has been implemented, then it (the tracker) wont crash.
+    # Insted we write to a log file, so that the user can figure out the problem afterwards.
+    # {method} (Symbol) That method that is being called
+    # {option} (Object) That params to the {method}, can be anything, including {nil}
+    # Returns a boolean, {true} if the {method} can handle the {option} params, {false} otherwise.
+    def valid_option?(method, option)
+      case method
+        when :details, :title
+          option.instance_of?(Nokogiri::XML::Element)
+        when :category_url
+          option.instance_of?(Symbol)
+        when :torrents, :seeders
+          option.instance_of?(Nokogiri::HTML::Document)
+        else
+          true
+      end
+    end
     # Cleans up the URL
     # The ingoing param to the {open | RestClient} method can handle the special characters below.
     # The only way to download the content that the URL points to is to escape those characters.

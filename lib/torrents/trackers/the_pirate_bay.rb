@@ -5,7 +5,7 @@ module Trackers
     end
   
     def torrent(tr)
-      tr.to_s.match(/(http:\/\/.+\.torrent)/)[1]
+      tr.to_s.match(/(http:\/\/.+\.torrent)/).to_a[1]
     end
   
     def title(tr)
@@ -13,7 +13,7 @@ module Trackers
     end
   
     def seeders(details)
-      details.to_s.match(/.+<dd>(\d+)<\/dd>/)[1]
+      details.to_s.match(/.+<dd>(\d+)<\/dd>/).to_a[1]
     end
     
     def torrents(site)

@@ -15,4 +15,12 @@ describe Torrents do
       @torrents.exists?("random").should be_false
     end
   end
+  
+  context "the content method" do
+    it "should return a nokogiri object" do
+      @torrents.should_receive(:url).and_return("data")
+      @torrents.should_receive(:download).with("data").and_return("more data")
+      @torrents.content.should be_instance_of(Nokogiri::HTML::Document)
+    end
+  end
 end

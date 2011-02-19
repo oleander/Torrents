@@ -32,7 +32,7 @@ module Container
     # {error} (Exception) The actual error that was thrown
     # TODO: Implement a real logger => http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/classes/Logger.html
     def error(messages, error = "")
-      return unless @debug
+      #return unless @debug
       messages = messages.class == Array ? messages : [messages]
       warn "An error in the Torrents gem occurred"
       warn "==> " + messages.join("\n\t")
@@ -49,7 +49,7 @@ module Container
       begin
         results = option.nil? ? self.load.send(method) : self.load.send(method, option) if self.valid_option?(method, option)
       rescue NoMethodError => error
-        self.error("An error in the #{@tracker} class at the #{method} method occurred", error)
+        self.error("An error occurred in the #{@tracker} class at the #{method} method.", error)
       ensure
         raise NotImplementedError.new("#{option} is not implemented yet") if results.nil? and method == :category_url
         return results.nil? ? self.default_values(method) : results

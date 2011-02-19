@@ -40,6 +40,38 @@ describe Container::Torrent do
       create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
     end
     
+    ["a", "a", "<tag>"].permutation.to_a.uniq.each do |invalid|
+      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+    end
+    
+    ["a", "a", " a"].permutation.to_a.uniq.each do |invalid|
+      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+    end
+    
     create_torrent({details: "a", torrent: "a", title: "a", tracker: "a"}).should be_valid
+  end
+  
+  it "should be dead" do
+    torrent = create_torrent({details: "a", torrent: "a", title: "a", tracker: "a"})
+    torrent.should_receive(:seeders).and_return(0)
+    torrent.should be_dead
+  end
+  
+  it "should not be dead" do
+    torrent = create_torrent
+    torrent.should_receive(:seeders).and_return(1)
+    torrent.should_not be_dead
+  end
+  
+  it "should return the right amount of seeders if it's nil" do
+    torrent = create_torrent
+    torrent.should_receive(:inner_call).and_return(nil)
+    torrent.seeders.should eq(1)
+  end
+  
+  it "should return the right amount of seeders if it's set" do
+    torrent = create_torrent
+    torrent.should_receive(:inner_call).and_return(50)
+    torrent.seeders.should eq(50)
   end
 end

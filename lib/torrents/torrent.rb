@@ -97,8 +97,9 @@ module Container
     # Returns an integer from 0 to inf
     def seeders
       return @seeders if @seeders
-      seeders = self.inner_call(:seeders, self.content)
-      @seeders ||= (seeders.nil? or seeders.to_s.empty? ? 1 : seeders).to_i
+      sed = self.inner_call(:seeders, self.content)
+      warn "Something is wrong, we can't find the seeder tag" if sed.nil?
+      @seeders ||= ((sed.nil? or sed.to_s.empty?) ? 1 : sed).to_i
     end
     
     # Is the torrent valid?
@@ -112,7 +113,9 @@ module Container
       [:details, :torrent, :title, :seeders].each do |method|
         data = self.send(method)
         return false if self.send(method).nil? or data.to_s.empty? or data.to_s.match(/<\/?[^>]*>/) or data.to_s.strip != data.to_s
-      end; true
+      end
+      
+      return true
     end
     
     # Downloads the detailed view for this torrent

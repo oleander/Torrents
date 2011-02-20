@@ -84,4 +84,21 @@ describe Container::Torrent do
     
     torrent.id.should eq(0)
   end
+  
+  it "should have a unique tid (torrent id)" do
+    torrents = []
+    100.times do |n|
+      torrents << create_torrent({
+        details: "http://thepiratebay.org/torrent/617#{n}093/", 
+        torrent: "http://torrents.thepiratebay.org/617093/value.torrent", 
+        title: "The title", 
+        tracker: "the_pirate_bay"
+      })
+    end
+    
+    torrents.map!(&:tid)
+    lambda do
+      torrents.uniq!
+    end.should_not change(torrents, :count)
+  end
 end

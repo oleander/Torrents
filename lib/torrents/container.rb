@@ -4,6 +4,7 @@ module Container
   require 'rchardet19'
   require "iconv"
   require "classify"
+  require "digest/md5"
   
   # Loads all trackers inside the trackers directory
   Dir["#{File.dirname(File.expand_path(__FILE__))}/trackers/*.rb"].each {|rb| require "#{rb}"}
@@ -168,6 +169,17 @@ module Container
     # Generates an id using the details url
     def id
       @id ||= self.inner_call(:id, self.details).to_i
+    end
+    
+    # Returnes the domain for the torrent, without http or www
+    # If the domain for some reason isn't found, it will use an empty string
+    def domtain
+      self.details.match(/(ftp|http|https):\/\/([w]+\.)?(.+\.[a-z]{2,3})/).to_a[3] || ""
+    end
+    
+    # Returnes a unique id for the torrent based on the domain and the id of the torrent
+    def tid
+      Digest::MD5.hexdigest("#{domtain}#{id}")
     end
   end
 end

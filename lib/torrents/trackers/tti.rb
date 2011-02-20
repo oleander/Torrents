@@ -1,39 +1,39 @@
 module Trackers
-  class Tii
+  class Tti
     def details(tr)
-      "http://torrentleech.org" + tr.at_css('.title a').attr('href')
+      "http://tti.nu" + tr.to_s.match(/(details\.php\?id=\d+)/i).to_a[1]
     end
   
     def torrent(tr)
-      "http://torrentleech.org" + tr.at_css('td.quickdownload a').attr('href')
+      "http://tti.nu" + tr.at_css('.direct_download a').attr('href')
     end
   
     def title(tr)
-      tr.at_css('.title a').content
+      tr.at_css('td:nth-child(2) b').content.gsub(/\.\.\.$/, "")
     end
   
     def seeders(details)
-      details.to_s.match(/\((\d+) Seeders and \d+ leechers\)/).to_a[1]
+      details.to_s.match(/(\d+) seeder\(s\)\,/).to_a[1]
     end
     
     def torrents(site)
-      site.css('#torrenttable tr')
+      site.css('table[border="0"] tr')
     end
     
     def search_url
-      "http://www.torrentleech.org/torrents/browse/index/query/<SEARCH>/page/<PAGE>"
+      "http://tti.nu/browse.php?search=<SEARCH>&page=<PAGE>&incldead=0"
     end
     
     def recent_url
-      "http://www.torrentleech.org/torrents/browse/index/page/<PAGE>"
+      "http://tti.nu/browse.php?page=<PAGE>&incldead=0"
     end
     
     def start_page_index
-      1
+      0
     end
     
     def category_url(type)
-      {:movies => "http://www.torrentleech.org/torrents/browse/index/categories/1,8,9,10,11,12,13,14,15,29/page/<PAGE>"}[type]
+      {:movies => "http://tti.nu/browse.php?c47=1&c65=1&c59=1&c48=1&page=<PAGE>&incldead=0"}[type]
     end
   end
 end

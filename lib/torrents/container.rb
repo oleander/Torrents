@@ -4,8 +4,10 @@ module Container
   require 'rchardet19'
   require "iconv"
   require "classify"
-  Dir["lib/torrents/trackers/*.rb"].each {|rb| require "./#{rb}"}
   
+  # Loads all trackers inside the trackers directory
+  Dir["#{File.dirname(File.expand_path(__FILE__))}/trackers/*.rb"].each {|rb| require "#{rb}"}
+
   class Shared
     include Trackers
     # Downloads the URL, returns an empty string if an error occurred

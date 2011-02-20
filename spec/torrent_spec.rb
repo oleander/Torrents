@@ -29,32 +29,10 @@ describe Container::Torrent do
   end
   
   it "should have a working valid? method" do
-    ["a", "a", ""].permutation.to_a.uniq.each do |invalid|
-      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
-    end
-    
-    ["a", "a", nil].permutation.to_a.uniq.each do |invalid|
-      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
-    end
-    
-    ["a", "a", "<tag>"].permutation.to_a.uniq.each do |invalid|
-      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
-    end
-    
-    ["a", "a", " a"].permutation.to_a.uniq.each do |invalid|
-      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
-    end
-    
-    ["a", "http://google.com", "a"].permutation.to_a.uniq.each do |invalid|
-      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
-    end
-    
-    ["a", "http://google.com.torrent", "a"].permutation.to_a.uniq.each do |invalid|
-      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
-    end
-    
-    ["a", "http://google.com", "a.torrent"].permutation.to_a.uniq.each do |invalid|
-      create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+    [["a", "a", ""], ["a", "a", nil], ["a", "a", "<tag>"], ["a", "a", " a"], ["a", "http://google.com", "a"], ["a", "http://google.com.torrent", "a"], ["a", "http://google.com", "a.torrent"]].each do |option|
+      option.permutation.to_a.uniq.each do |invalid|
+        create_torrent({details: invalid[0], torrent: invalid[1], title: invalid[2], tracker: 'the_pirate_bay'}).should_not be_valid
+      end
     end
      
     create_torrent({details: "http://google.com", torrent: "http://google.com.torrent", title: "a", tracker: "a"}).should be_valid

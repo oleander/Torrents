@@ -92,7 +92,8 @@ class Torrents < Container::Shared
       arguments = {
         details: self.inner_details(tr),
         torrent: self.inner_torrent(tr),
-        title: self.inner_title(tr).to_s.strip
+        title: self.inner_title(tr).to_s.strip,
+        tracker: @tracker
       }
       
       arguments.merge!(:debug => @debug) if @debug

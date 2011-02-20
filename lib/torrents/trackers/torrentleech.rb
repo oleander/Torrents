@@ -37,7 +37,7 @@ module Trackers
     end
     
     def id(details)
-      details.match(/\/\d+$/).to_a[1]
+      details.match(/\/(\d+)$/).to_a[1]
     end
   end
 end

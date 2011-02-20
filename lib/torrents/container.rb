@@ -64,7 +64,7 @@ module Container
     # If the method for some reason isn't implemented (is not in the hash below), then it will return an empty string
     # {method} (Hash) The method that raised an exception 
     def default_values(method)
-      warn "Something went wrong, we can't find the #{method} tag, using default values"
+      # warn "Something went wrong, we can't find the #{method} tag, using default values"
       {torrent: "", torrents: [], seeders: 1, title: "", details: "", id: 0}[method] || ""
     end
     

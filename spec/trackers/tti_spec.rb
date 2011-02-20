@@ -16,7 +16,7 @@ describe Trackers::Tti do
       details: "http://tti.nu/details.php?id=132470", 
       torrent: "http://tti.nu/download2.php/132230/Macbeth.2010.DVDRip.XviD-VoMiT.torrent", 
       title: "The title", 
-      tracker: "Tti",
+      tracker: "tti",
       cookies: cookies
     })
   end
@@ -27,6 +27,7 @@ describe Trackers::Tti do
     
     torrents.results.each do |torrent|
       torrent.title.should_not eq(torrent.torrent)
+      torrent.id.should_not eq(0)
     end
     
     torrents.should have(50).results
@@ -39,7 +40,7 @@ describe Trackers::Tti do
     torrent.should be_valid    
     torrent.seeders.should eq(70)
   end
-
+  
   it "should be possible to list recent torrents" do
     rest_client("http://tti.nu/browse.php?page=0&incldead=0", "recent")
     Torrents.tti.cookies(cookies).should have(50).results

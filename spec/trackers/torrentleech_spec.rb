@@ -27,6 +27,7 @@ describe Trackers::Torrentleech do
     
     torrents.results.each do |torrent|
       torrent.title.should_not eq(torrent.torrent)
+      torrent.id.should_not eq(0)
     end
     
     torrents.should have(100).results

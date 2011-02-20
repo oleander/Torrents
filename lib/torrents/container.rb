@@ -82,7 +82,7 @@ module Container
     # Returns a boolean, {true} if the {method} can handle the {option} params, {false} otherwise.
     def valid_option?(method, option)
       case method
-        when :details, :title
+        when :details, :title, :torrent
           option.instance_of?(Nokogiri::XML::Element)
         when :category_url
           option.instance_of?(Symbol)

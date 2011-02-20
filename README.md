@@ -26,7 +26,7 @@ The `page` method can be places anywhere before the `results` method.
 
 Some trackers requires cookies to work, even though [The Pirate Bay](http://thepiratebay.org/) is not one of them.
 
-    >> Torrents.the_pirate_bay.cookies(:user_id => "123", :hash => "c4656002ce46f9b418ce72daccfa5424").results
+    >> Torrents.the_pirate_bay.cookies(user_id: "123", hash: "c4656002ce46f9b418ce72daccfa5424").results
 
 ## What is being returned?
 
@@ -54,6 +54,145 @@ The `Container::Torrent` class has some nice accessors that might be useful.
 
 - [TTI](http://tti.nu/)
 - [Torrentleech](http://www.torrentleech.org/)
+
+
+## How to add your own tracker
+
+All heavy lifting has already been done, so it should be quite easy for you to implement your own site.
+
+This is a short tutorial of how to implement the *Super Tracker*
+### Create the cache
+
+The first thing to do is to create a local cache to read from during testing.
+You need an HTML template for 4 diffrent page.
+
+- **Search** *search.html* - The page containing a search result.
+- **Details** *details.html* - The details view for any torrent.
+- **Movies** *movies.html* - Recent torrents from the movie category.
+- **Recent** *recent.html* - The most recent torrents on the site.
+
+Save the files to `spec/data/*super_tracker*`. 
+Take a look at the pirate bay example files [here](https://github.com/oleander/Torrents/tree/master/spec/data/the_pirate_bay).
+
+**Note:** Be sure to remove your personal information from the HTML files, like username and user id.
+
+### Implement the tracker class
+
+Next step is to implement the 10 methods to parse the tracker.
+
+Create a class called *super_tracker* inside `lib/torrents/trackers`.
+
+Add this skeleton to the newly created file.
+
+    module Trackers
+      class SuperTracker
+        def details(tr)
+          # TODO
+        end
+  
+        def torrent(tr)
+          # TODO
+        end
+  
+        def title(tr)
+          # TODO
+        end
+  
+        def seeders(details)
+          # TODO
+        end
+    
+        def torrents(site)
+          # TODO
+        end
+    
+        def search_url
+          # TODO
+        end
+    
+        def recent_url
+          # TODO
+        end
+    
+        def start_page_index
+          # TODO
+        end
+    
+        def category_url(type)
+          # TODO
+        end
+    
+        def id(details)
+          # TODO
+        end
+      end
+    end
+
+#### This is how it all works
+
+When someone calls `Trackers.super_tracker` the `SuperTracker` class will be called.
+
+When the Tracker class need inforamtion about something, like the amount of seeders, the `SuperTracker` will be called.
+
+#### Methods to implement
+
+The methods in the Tracker module will be called with some arguments that you have to modify and return.
+
+These are the methods and what they are being called with.
+
+##### details
+
+Argument: `Nokogiri::XML::Element` object representing a table row.
+Returnes: The full url to the details page for the torrent of the current row.
+
+##### torrent
+
+Argument: `Nokogiri::XML::Element` object representing a table row.
+Returnes: The full url to the torrent for of current row.
+
+##### title
+
+Argument: `Nokogiri::XML::Element` object representing a table row.
+Returnes: The title of the torrent for of current row.
+
+##### seeders
+
+Argument: `Nokogiri::HTML::Document` object representing the details page.
+Returnes: The amount of seeders for the specific torrent.
+
+##### torrents
+
+Argument: `Nokogiri::HTML::Document` object representing the torrent table.
+Returnes: A list of `Nokogiri::XML::Element` object representing a list of rows.
+
+##### search_url
+
+Argument: none
+Returnes: The url to be used when searching for a torrent.
+
+##### recent_url
+
+Argument: none
+Returnes: The url to be used when lising the most recent torrents.
+
+##### start_page_index
+
+Argument: none
+Returnes: The index to be used as the start page.
+
+##### category_url
+
+Argument: A `Symbol` representing the category search for.
+Returnes: The category url for the ingoing argument.
+
+##### id
+
+Argument: A `String` representing the details url.
+Returnes: The id for the torrent, parsed from the details url.
+
+#### Example class
+
+You can take a look at the [Pirate Bay example](https://github.com/oleander/Torrents/blob/master/lib/torrents/trackers/the_pirate_bay.rb) if something is unclear. 
 
 ## How do install
 

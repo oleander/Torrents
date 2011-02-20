@@ -45,7 +45,7 @@ describe Trackers::Tti do
     Torrents.tti.cookies(cookies).should have(50).results
   end
   
-  it "should found 100 recent movies" do
+  it "should found 50 recent movies" do
     rest_client("http://tti.nu/browse.php?c47=1&c65=1&c59=1&c48=1&page=0&incldead=0", "movies")
     Torrents.tti.cookies(cookies).category(:movies).should have(50).results
   end

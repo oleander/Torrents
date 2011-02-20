@@ -35,5 +35,9 @@ module Trackers
     def category_url(type)
       {:movies => "http://tti.nu/browse.php?c47=1&c65=1&c59=1&c48=1&page=<PAGE>&incldead=0"}[type]
     end
+    
+    def id(details)
+      details.match(/id=(\d+)/).to_a[1]
+    end
   end
 end

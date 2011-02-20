@@ -35,5 +35,9 @@ module Trackers
     def category_url(type)
       {:movies => "http://thepiratebay.org/browse/201/<PAGE>/3"}[type]
     end
+    
+    def id(details)
+      details.match(/\/(\d+)\//).to_a[1]
+    end
   end
 end

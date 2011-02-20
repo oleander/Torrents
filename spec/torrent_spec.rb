@@ -35,7 +35,8 @@ describe Container::Torrent do
       end
     end
      
-    create_torrent({details: "http://google.com", torrent: "http://google.com.torrent", title: "a", tracker: "a"}).should be_valid
+    create_torrent({details: "http://google.com/123/", torrent: "http://google.com.torrent", title: "a", tracker: "the_pirate_bay"}).should be_valid
+    create_torrent({details: "http://google.com/random/", torrent: "http://google.com.torrent", title: "a", tracker: "the_pirate_bay"}).id.should eq(0)
   end
   
   it "should be dead" do
@@ -52,7 +53,7 @@ describe Container::Torrent do
   
   it "should return the right amount of seeders if it's nil" do
     torrent = create_torrent
-    torrent.should_receive(:inner_call).and_return(nil)
+    torrent.should_receive(:valid_option?).and_return(false)
     torrent.seeders.should eq(1)
   end
   
@@ -66,5 +67,21 @@ describe Container::Torrent do
     torrent = create_torrent
     torrent.should_receive(:download).exactly(1).times.and_return("")
     10.times { torrent.seeders }
+  end
+  
+  it "should have a id method" do
+    torrent = create_torrent
+    torrent.id.should eq(6173093)
+  end
+  
+  it "should have an id 0 if the details url is invalid" do
+    torrent = create_torrent({
+      details: "http://thepiratebay.org/torrent/random/", 
+      torrent: "http://torrents.thepiratebay.org/6173093/value.torrent", 
+      title: "The title", 
+      tracker: "the_pirate_bay"
+    })
+    
+    torrent.id.should eq(0)
   end
 end

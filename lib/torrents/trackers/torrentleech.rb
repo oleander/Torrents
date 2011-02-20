@@ -35,5 +35,9 @@ module Trackers
     def category_url(type)
       {:movies => "http://www.torrentleech.org/torrents/browse/index/categories/1,8,9,10,11,12,13,14,15,29/page/<PAGE>"}[type]
     end
+    
+    def id(details)
+      details.match(/\/\d+$/).to_a[1]
+    end
   end
 end

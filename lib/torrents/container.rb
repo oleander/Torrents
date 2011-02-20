@@ -15,7 +15,7 @@ module Container
     # {url} (String) The URL to download
     def download(url)
       begin
-        data = RestClient.get self.url_cleaner(url), {:timeout => 10}, {:cookies => @cookies}
+        data = RestClient.get self.url_cleaner(url), {:timeout => 10, :cookies => @cookies}
         cd = CharDet.detect(data)
         return (cd["confidence"] > 0.6) ? (Iconv.conv(cd["encoding"] + "//IGNORE", "UTF-8", data) rescue data) : data
       rescue

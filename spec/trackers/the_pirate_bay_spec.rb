@@ -1,6 +1,6 @@
 describe Trackers::ThePirateBay do  
   def rest_client(url, type)
-    RestClient.should_receive(:get).with(url, {:timeout => 10}, {:cookies => nil}).any_number_of_times.and_return(File.read("spec/data/the_pirate_bay/#{type}.html"))
+    RestClient.should_receive(:get).with(url, {:timeout => 10, :cookies => nil}).any_number_of_times.and_return(File.read("spec/data/the_pirate_bay/#{type}.html"))
   end
   
   def create_torrent

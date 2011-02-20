@@ -11,7 +11,7 @@ describe Container::Shared do
     end
 
     it "should return the content of the site if called with the right url" do
-      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10}, {:cookies => nil}).exactly(1).times.and_return("123")
+      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
       @shared.download("http://example.com").should eq("123")
     end
   end

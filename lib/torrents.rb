@@ -92,6 +92,8 @@ class Torrents < Container::Shared
       }
       
       arguments.merge!(:debug => @debug) if @debug
+      arguments.merge!(:cookies => @cookies) if @cookies
+      
       torrent = Container::Torrent.new(arguments)
       
       @torrents << torrent if torrent.valid?

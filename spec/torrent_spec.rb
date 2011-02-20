@@ -6,7 +6,7 @@ describe Container::Torrent do
   end
 
   def rest_client
-    RestClient.should_receive(:get).with("http://thepiratebay.org/torrent/6173093/", {:timeout => 10}, {:cookies => nil}).any_number_of_times.and_return(File.read('spec/data/the_pirate_bay/details.html'))
+    RestClient.should_receive(:get).with("http://thepiratebay.org/torrent/6173093/", {:timeout => 10, :cookies => nil}).any_number_of_times.and_return(File.read('spec/data/the_pirate_bay/details.html'))
   end
   
   before(:all) do

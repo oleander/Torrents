@@ -39,7 +39,7 @@ The `Container::Torrent` class has some nice accessors that might be useful.
 - **title** (String) Title of the torrent.
 - **details** (String) The url to the details page for the torrent.
 - **seeders** (Fixnum) The amount of seeders for the torrent. **Note:** Keep in mind that it will do another request to the details url to get this info. 
-- **dead?** (Boolean) Check to see if the torrent has no seeders. If it has no seeders, then `dead?` will be true. **Note:** Keep in mind that it will do another request to the details url to get this info.
+- **dead?** (Boolean) Check to see if the torrent has no seeders. If it has no seeders, then `dead?` will be true. **Note:** See the *seeders* method.
 - **torrent** (String) The url to the torrent. This should be a direct link to the torrent.
 - **id** (Fixnum) An unique id for the torrent. The id is only unique for this specific torrent, not all torrents.
 - **tid** (String) The `tid` method, also known as `torrent id` is a *truly* unique identifier for all torrents. It is generated using a [MD5](http://sv.wikipedia.org/wiki/MD5) with the torrent domain and the `id` method as a seed.
@@ -55,21 +55,21 @@ The `Container::Torrent` class has some nice accessors that might be useful.
 - [TTI](http://tti.nu/)
 - [Torrentleech](http://www.torrentleech.org/)
 
-### How do install
+## How do install
 
     [sudo] gem install torrents
     
-### How to use it in a rails 3 project
+## How to use it in a rails 3 project
 
 Add `gem 'torrents'` to your Gemfile and run `bundle`.
 
-### How to help
+## How to help
 
 - Start by copying the project or make your own branch.
 - Navigate to the root path of the project and run `bundle`.
 - Start by running all tests using rspec, `autotest`.
 - Implement your own code, write some tests, commit and do a pull request.
 
-### Requirements
+## Requirements
 
 Torrents is tested in OS X 10.6.6 using Ruby 1.9.2.

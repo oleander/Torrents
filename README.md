@@ -252,7 +252,7 @@ The following should be covered in your test.
 
 Add the new site to the readme.
 
-There should be a list in the upper part of the document.
+There should be a list in the upper part of the readme.
 
 ### When done
 

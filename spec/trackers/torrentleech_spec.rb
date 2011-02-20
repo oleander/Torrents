@@ -36,9 +36,7 @@ describe Trackers::Torrentleech do
     rest_client("http://www.torrentleech.org/torrent/281171", "details")
     torrent = create_torrent
     
-    torrent.should be_valid    
     torrent.seeders.should eq(49)
-    torrent.should_not be_dead
   end
   
   it "should be possible to list recent torrents" do
@@ -48,6 +46,6 @@ describe Trackers::Torrentleech do
    
   it "should found 100 recent movies" do
     rest_client("http://www.torrentleech.org/torrents/browse/index/categories/1,8,9,10,11,12,13,14,15,29/page/1", "movies")
-    torrents = Torrents.torrentleech.cookies(cookies).category(:movies).should have(100).results
+    Torrents.torrentleech.cookies(cookies).category(:movies).should have(100).results
   end
 end

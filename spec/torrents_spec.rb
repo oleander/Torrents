@@ -44,6 +44,21 @@ describe Torrents do
       @torrents.inner_page.should eq("1")
     end
     
+    it "should not care about the order of the page, if the page isn't specified, one" do
+      @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(1)
+      @torrents.inner_page.should eq("1")
+    end
+    
+    it "should not care about the order of the page, if the page isn't specified, high" do
+      @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(10)
+      @torrents.inner_page.should eq("10")
+    end
+    
+    it "should not care about the order of the page, if the page isn't specified, zero" do
+      @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(0)
+      @torrents.inner_page.should eq("0")
+    end
+    
     it "should raise an exception if the page number is lower then 0" do
       @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(0)
       lambda {

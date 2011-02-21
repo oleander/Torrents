@@ -87,21 +87,38 @@ class Torrents < Container::Shared
     return this.add(method)
   end
   
+  # Returnes a Container::Torrent object
+  # {details} (String) The details url for the torrent
+  # It is at the moment only possible to access dead?, seeders and the tid method
+  # This because we've not implemented a torrent and title parser for the details view
+  def find_by_details(details)
+    self.create_torrent({
+      details: details,
+      tracker: @tracker
+    })
+  end
+  
+  # Creates a torrent based on the ingoing arguments
+  # Is used by {find_by_details} and the {results} method
+  # Returnes a Container::Torrent object
+  # {arguments} (Hash) The params to the Torrent constructor
+  # The debugger and cookie param is passed by default
+  def create_torrent(arguments)
+    arguments.merge!(:debug => @debug) if @debug
+    arguments.merge!(:cookies => @cookies) if @cookies
+    return Container::Torrent.new(arguments)
+  end
+  
   def results
     return @torrents if @torrents.any?
     self.inner_torrents(self.content).each do |tr|
       
-      arguments = {
+      torrent = self.create_torrent({
         details: self.inner_details(tr),
         torrent: self.inner_torrent(tr),
         title: self.inner_title(tr).to_s.strip,
         tracker: @tracker
-      }
-      
-      arguments.merge!(:debug => @debug) if @debug
-      arguments.merge!(:cookies => @cookies) if @cookies
-      
-      torrent = Container::Torrent.new(arguments)
+      }) # Creates the torrent
       
       @torrents << torrent if torrent.valid?
     end

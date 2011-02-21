@@ -58,6 +58,7 @@ module Container
         value = results.nil? ? self.default_values(method) : results
       end
       
+      
       return value
     end
     
@@ -173,13 +174,13 @@ module Container
     
     # Returnes the domain for the torrent, without http or www
     # If the domain for some reason isn't found, it will use an empty string
-    def domtain
+    def domain
       self.details.match(/(ftp|http|https):\/\/([w]+\.)?(.+\.[a-z]{2,3})/).to_a[3] || ""
     end
     
     # Returnes a unique id for the torrent based on the domain and the id of the torrent
     def tid
-      Digest::MD5.hexdigest("#{domtain}#{id}")
+      Digest::MD5.hexdigest("#{domain}#{id}")
     end
     
     # Just a mirror method for {tid}, just in case someone don't like the method name tid

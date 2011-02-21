@@ -1,6 +1,10 @@
 require 'spec_helper'
 
-describe Torrents do  
+describe Torrents do
+  def rest_client(url, type)
+    RestClient.should_receive(:get).with(url, {:timeout => 10, :cookies => nil}).any_number_of_times.and_return(File.read("spec/data/the_pirate_bay/#{type}.html"))
+  end
+   
   before(:each) do
     @torrents = Torrents.the_pirate_bay
   end
@@ -180,6 +184,18 @@ describe Torrents do
     it "should be possible to pass some cookies" do
       RestClient.should_receive(:get).with("http://thepiratebay.org/recent/0", {:timeout => 10, :cookies => {:session_id => "1234"}}).exactly(1).times.and_return("")
       @torrents.cookies(:session_id => "1234").content
+    end
+  end
+  
+  context "the add method" do
+    it "should be possible to add a details link and get appropriate data" do
+      rest_client("http://thepiratebay.org/torrent/6173093/", "details")
+      
+      torrent = Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
+      torrent.should_not be_dead
+      torrent.seeders.should eq(9383)
+      torrent.tid.should_not be_empty
+      torrent.domain.should eq("thepiratebay.org")
     end
   end
 end

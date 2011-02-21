@@ -31,7 +31,7 @@ class Torrents < Container::Shared
   
   # Set the default page
   def inner_page
-    (@page ||= self.inner_start_page_index).to_s
+    ((@page ||= 1) - 1 + self.inner_start_page_index).to_s
   end
 
   def url
@@ -46,7 +46,9 @@ class Torrents < Container::Shared
   end
   
   def page(value)
-    @page = value; self
+    @page = value
+    raise ArgumentError.new("To low page value, remember that the first page has the value 1") if self.inner_page.to_i < 0
+    self
   end
   
   def debugger(value)

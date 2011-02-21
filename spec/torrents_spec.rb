@@ -21,14 +21,34 @@ describe Torrents do
   end
   
   context "the inner_page method" do
-    it "should return the right value when using the setter method page" do
-      @torrents.page(3)
-      @torrents.inner_page.should eq("3")
+    it "should not care about the order of the page, high" do
+      @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(10)
+      @torrents.page(1)
+      @torrents.inner_page.should eq("10")
     end
     
     it "should return the pre defined value" do
-      @torrents.should_receive(:inner_start_page_index).and_return(99)
+      @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(99)
       @torrents.inner_page.should eq("99")
+    end
+    
+    it "should not care about the order of the page, low" do
+      @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(0)
+      @torrents.page(1)
+      @torrents.inner_page.should eq("0")
+    end
+    
+    it "should not care about the order of the page, low again" do
+      @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(1)
+      @torrents.page(1)
+      @torrents.inner_page.should eq("1")
+    end
+    
+    it "should raise an exception if the page number is lower then 0" do
+      @torrents.should_receive(:inner_start_page_index).any_number_of_times.and_return(0)
+      lambda {
+        @torrents.page(0)
+      }.should raise_error(ArgumentError, "To low page value, remember that the first page has the value 1")
     end
   end
   
@@ -47,7 +67,7 @@ describe Torrents do
     end
     
     it "should be possible to list torrents based on a category" do
-      @torrents.category(:movies).page(100).url.should eq("http://thepiratebay.org/browse/201/100/3")
+      @torrents.category(:movies).page(100).url.should eq("http://thepiratebay.org/browse/201/99/3")
     end
     
     it "should raise an exception if trying to fetch a non existing category" do
@@ -63,11 +83,11 @@ describe Torrents do
     end
     
     it "page" do
-      @torrents.page("value").should be_instance_of(Torrents)
+      @torrents.page(10).should be_instance_of(Torrents)
     end
     
     it "debugger" do
-      @torrents.debugger("value").should be_instance_of(Torrents)
+      @torrents.debugger(true).should be_instance_of(Torrents)
     end
     
     it "search" do
@@ -147,5 +167,4 @@ describe Torrents do
       @torrents.cookies(:session_id => "1234").content
     end
   end
-  
 end

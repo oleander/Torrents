@@ -5,6 +5,20 @@ describe Container::Torrent do
     Container::Torrent.new(args)
   end
 
+  def create_torrents(n)
+    torrents = []
+    n.times do |n|
+      torrents << create_torrent({
+        details: "http://thepiratebay.org/torrent/617#{n}093/", 
+        torrent: "http://torrents.thepiratebay.org/617093/value.torrent", 
+        title: "The title", 
+        tracker: "the_pirate_bay"
+      })
+    end
+    
+    torrents
+  end
+  
   def rest_client
     RestClient.should_receive(:get).with("http://thepiratebay.org/torrent/6173093/", {:timeout => 10, :cookies => nil}).any_number_of_times.and_return(File.read('spec/data/the_pirate_bay/details.html'))
   end
@@ -86,19 +100,17 @@ describe Container::Torrent do
   end
   
   it "should have a unique tid (torrent id)" do
-    torrents = []
-    100.times do |n|
-      torrents << create_torrent({
-        details: "http://thepiratebay.org/torrent/617#{n}093/", 
-        torrent: "http://torrents.thepiratebay.org/617093/value.torrent", 
-        title: "The title", 
-        tracker: "the_pirate_bay"
-      })
-    end
+    torrents = create_torrents(100)
     
     torrents.map!(&:tid)
     lambda do
       torrents.uniq!
     end.should_not change(torrents, :count)
+  end
+  
+  it "should have a torrent id method that equals the tid method" do
+    create_torrents(100).each do |torrent|
+      torrent.torrent_id.should eq(torrent.tid)
+    end
   end
 end

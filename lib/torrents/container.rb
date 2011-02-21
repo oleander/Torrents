@@ -181,5 +181,10 @@ module Container
     def tid
       Digest::MD5.hexdigest("#{domtain}#{id}")
     end
+    
+    # Just a mirror method for {tid}, just in case someone don't like the method name tid
+    def torrent_id
+      self.tid
+    end
   end
 end

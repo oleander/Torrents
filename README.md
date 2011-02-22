@@ -53,11 +53,11 @@ Some trackers requires cookies to work, even though [The Pirate Bay](http://thep
 ### The results method
 
 As soon as you apply the `results` method on the query it will try to execute your request.
-If you for example want to activate the debugger, define some cookies and specify a page, then you can do it like this.
+If you for example want to activate the debugger, define some cookies or specify a page, then you might do something like this.
       
       $ Torrents.the_pirate_bay.page(5).debug(true).cookies(:my_cookie => "value").results
       
-It will return a list of `Container::Torrent` object if the request was sucessfull, otherwise it will return an empty list.
+It will return a list of `Container::Torrent` object if the request was sucessfull, otherwise an empty list.
 
 ### The find_by_details method
 

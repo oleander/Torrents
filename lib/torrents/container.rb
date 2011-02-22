@@ -174,13 +174,13 @@ module Container
       @id ||= self.inner_call(:id, self.details).to_i
     end
     
-    # Returnes the domain for the torrent, without http or www
+    # Returns the domain for the torrent, without http or www
     # If the domain for some reason isn't found, it will use an empty string
     def domain
       self.details.match(/(ftp|http|https):\/\/([w]+\.)?(.+\.[a-z]{2,3})/).to_a[3] || ""
     end
     
-    # Returnes a unique id for the torrent based on the domain and the id of the torrent
+    # Returns a unique id for the torrent based on the domain and the id of the torrent
     def tid
       Digest::MD5.hexdigest("#{domain}#{id}")
     end
@@ -190,26 +190,45 @@ module Container
       self.tid
     end
     
+    # Returns the full url to the related imdb page
+    # The link is parsed from the details view
+    # Example: http://www.imdb.com/title/tt0066026
+    # Return type: String or nil
     def imdb
       @imdb ||= self.content.to_s.match(/((http:\/\/)?([w]{3}\.)?imdb.com\/title\/tt\d+)/i).to_a[1]
     end
-
+    
+    # Returns the imdb id for the torrent, including the tt at the beginning
+    # Example: tt0066026
+    # Return type: String or nil
     def imdb_id
       @imdb_id ||= self.imdb.to_s.match(/(tt\d+)/).to_a[1]
     end
     
+    # Returns an movie_searcher object based on the imdb_id, if it exists, otherwise the torrent title
+    # Read more about it here: https://github.com/oleander/MovieSearcher
+    # Return type: A MovieSearcher object or nil
     def movie
       self.imdb_id.nil? ? MovieSearcher.find_by_release_name(self.title) : MovieSearcher.find_movie_by_id(self.imdb_id)
     end
     
+    # Returns the title for the torrent
+    # If the title has't been set from the Torrents class, we will download the details page try to find it there.
+    # Return type: String or nil
     def title
       @title ||= self.inner_call(:details_title, self.content)
     end
     
+    # Returns a Undertexter object, if we found a imdb_id, otherwise nil
+    # Read more about it here: https://github.com/oleander/Undertexter
+    # Return type: A single Undertexter object or nil
     def subtitle(option = :english)
       @subtitle ||= Undertexter.find(self.imdb_id, language: option).based_on(self.title)
     end
     
+    # Returns the torrent for the torrent
+    # If the torrent has't been set from the Torrents class, we will download the details page try to find it there.
+    # Return type: String or nil
     def torrent
       @torrent ||= self.inner_call(:details_torrent, self.content)
     end

@@ -89,8 +89,6 @@ class Torrents < Container::Shared
   
   # Returnes a Container::Torrent object
   # {details} (String) The details url for the torrent
-  # It is at the moment only possible to access dead?, seeders and the tid method
-  # This because we've not implemented a torrent and title parser for the details view
   def find_by_details(details)
     self.create_torrent({
       details: details,

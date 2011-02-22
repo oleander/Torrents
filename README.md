@@ -114,6 +114,10 @@ Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-sc
 
 You don't have to take care about exceptions, `Torrents` does that for you.
 
+## Restrictions
+
+TODO: What restrictions that are involved in using the gem.
+ 
 ## How do install
 
     [sudo] gem install torrents

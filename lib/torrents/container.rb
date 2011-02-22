@@ -179,17 +179,17 @@ module Container
     # Returns the domain for the torrent, without http or www
     # If the domain for some reason isn't found, it will use an empty string
     def domain
-      self.details.match(/(ftp|http|https):\/\/([w]+\.)?(.+\.[a-z]{2,3})/).to_a[3] || ""
+      @domain ||= self.details.match(/(ftp|http|https):\/\/([w]+\.)?(.+\.[a-z]{2,3})/).to_a[3] || ""
     end
     
     # Returns a unique id for the torrent based on the domain and the id of the torrent
     def tid
-      Digest::MD5.hexdigest("#{domain}#{id}")
+      @tid ||= Digest::MD5.hexdigest("#{domain}#{id}")
     end
     
     # Just a mirror method for {tid}, just in case someone don't like the method name tid
     def torrent_id
-      self.tid
+      @torrent_id ||= self.tid
     end
     
     # Returns the full url to the related imdb page

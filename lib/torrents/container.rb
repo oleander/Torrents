@@ -37,11 +37,15 @@ module Container
     # {error} (Exception) The actual error that was thrown
     # TODO: Implement a real logger => http://www.ruby-doc.org/stdlib/libdoc/logger/rdoc/classes/Logger.html
     def error(messages, error = "")
-      return unless @debug
       messages = messages.class == Array ? messages : [messages]
+      error = error.inspect[0..60]
+      @errors << "#{messages.join(", ")}\n#{error}"
+      
+      return unless @debug
+      
       warn "An error in the Torrents gem occurred"
       warn "==> " + messages.join("\n\t")
-      warn "==> " + error.inspect[0..60] + " ..."
+      warn "==> " + error + " ..."
       warn "\n\n"
     end
     
@@ -112,6 +116,8 @@ module Container
     
     def initialize(args)
       args.keys.each { |name| instance_variable_set "@" + name.to_s, args[name] }
+      @errors = [] unless @errors
+      @debug = false unless @debug
     end
     
     # Is the torrent dead?

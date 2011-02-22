@@ -11,6 +11,7 @@ class Torrents < Container::Shared
   
   def initialize
     @torrents = []
+    @errors   = []
     @url = {
       callback: lambda { |obj|
         obj.send(:inner_recent_url)
@@ -87,7 +88,7 @@ class Torrents < Container::Shared
     return this.add(method)
   end
   
-  # Returnes a Container::Torrent object
+  # Returns a Container::Torrent object
   # {details} (String) The details url for the torrent
   def find_by_details(details)
     self.create_torrent({
@@ -98,7 +99,7 @@ class Torrents < Container::Shared
   
   # Creates a torrent based on the ingoing arguments
   # Is used by {find_by_details} and the {results} method
-  # Returnes a Container::Torrent object
+  # Returns a Container::Torrent object
   # {arguments} (Hash) The params to the Torrent constructor
   # The debugger and cookie param is passed by default
   def create_torrent(arguments)
@@ -107,20 +108,34 @@ class Torrents < Container::Shared
     return Container::Torrent.new(arguments)
   end
   
+  # Returns errors from the application.
+  # Return type: A list of strings
+  def errors
+    self.results; @errors
+  end
+  
   def results
     return @torrents if @torrents.any?
+    counter  = 0
+    rejected = 0
     self.inner_torrents(self.content).each do |tr|
+      counter += 1
       
       torrent = self.create_torrent({
         details: self.inner_details(tr),
         torrent: self.inner_torrent(tr),
         title: self.inner_title(tr).to_s.strip,
         tracker: @tracker
-      }) # Creates the torrent
+      })
       
-      @torrents << torrent if torrent.valid?
+      if torrent.valid?
+        @torrents << torrent
+      else
+        rejected += 1
+      end 
     end
     
+    @errors << "#{counter} torrents where found, #{rejected} where not valid" unless rejected.zero?
     return @torrents
   end
 end

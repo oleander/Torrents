@@ -119,9 +119,12 @@ class Torrents < Container::Shared
   end
   
   def results
-    return @torrents if @torrents.any? and not @step
+    @torrents = [] if @step
+    return @torrents if @torrents.any?
+    
     counter  = 0
     rejected = 0
+    
     self.inner_torrents(self.content).each do |tr|
       counter += 1
       

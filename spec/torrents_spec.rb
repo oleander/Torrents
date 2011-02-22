@@ -232,8 +232,8 @@ describe Torrents do
   context "the step method" do
     it "should be possible to step from 0 to 10" do
       10.times do |n|
-        RestClient.should_receive(:get).with("http://thepiratebay.org/recent/#{n}", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("")
-        @torrents.step.results
+        RestClient.should_receive(:get).with("http://thepiratebay.org/recent/#{n}", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return(File.read("spec/data/the_pirate_bay/recent.html"))
+        @torrents.step.should have(30).results
       end
     end
   end

@@ -1,6 +1,6 @@
 # Torrents
 
-Search and download torrents from your favorite bittorrent tracker using Ruby.
+Search and download torrents from your favorite bittorrent tracker using **Ruby 1.9**.
 
 Download and get information like:
 

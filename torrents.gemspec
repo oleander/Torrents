@@ -3,13 +3,13 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "torrents"
-  s.version     = "1.0.0"
+  s.version     = "1.0.1"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Linus Oleander"]
   s.email       = ["linus@oleander.nu"]
   s.homepage    = "https://github.com/oleander/Torrents"
-  s.summary     = %q{Search and download torrents from your favorite bittorrent tracker using Ruby}
-  s.description = %q{Search and download torrents from your favorite bittorrent tracker using Ruby. 
+  s.summary     = %q{Search and download torrents from your favorite bittorrent tracker using Ruby 1.9}
+  s.description = %q{Search and download torrents from your favorite bittorrent tracker using Ruby 1.9. 
     Get information like; subtitles, movie information from IMDB (actors, grade, original title, length, trailers and so on.), direct download link to the torrent.
   }
 
@@ -28,4 +28,6 @@ Gem::Specification.new do |s|
   s.add_dependency('undertexter', '~> 0.1.5')
   
   s.add_development_dependency('rspec')
+  
+  s.required_ruby_version = '>= 1.9.0'
 end

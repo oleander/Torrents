@@ -61,7 +61,7 @@ describe Trackers::Torrentleech do
     torrent.imdb.should eq("http://www.imdb.com/title/tt1243957")
     torrent.imdb_id.should eq("tt1243957")
     torrent.id.should eq(281171)
-    torrent.torrent.should eq("http://www.torrentleech.org/download/281171/The.Tourist.2010.720p.BRRip.x264-TiMPE.torrent")
+    torrent.torrent.should eq("http://torrentleech.org/download/281171/The.Tourist.2010.720p.BRRip.x264-TiMPE.torrent")
     torrent.title.should eq("The Tourist 2010 720p BRRip x264-TiMPE")
   end
 end

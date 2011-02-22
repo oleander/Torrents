@@ -116,16 +116,15 @@ Request a list of errors using the `errors` method.
 ## How do access tracker X
 
 Here is how to access an implemented tracker.
-The first static method to apply is the name of the tracker in lower non camel cased letter.
+The first static method to apply is the name of the tracker in lower non camel cased letters.
 
-The Pirate Bay becomes `the_pirate_bay`, TTI becomes`tti` and Torrentleech `torrentleech`.
+The Pirate Bay becomes `the_pirate_bay`, TTI becomes `tti` and Torrentleech `torrentleech`.
 
 Here is an example.
 
     $ Torrents.torrentleech.cookies({:my_cookie => "value"}).results 
 
 Take a look at the [tests](https://github.com/oleander/Torrents/tree/master/spec/trackers) for all trackers to get to know more.
-The test are a bit messy, I know. That is one thing that will be cleaned up in the future.
 
 ## Add you own tracker
 
@@ -143,8 +142,8 @@ Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-sc
 1. Create your own fork of the project.
 2. Create and implement a tracker file inside the [tracker directory](https://github.com/oleander/Torrents/tree/master/lib/torrents/trackers).
 3. Add a cached version of the tracker [here](https://github.com/oleander/Torrents/tree/master/spec/data). **Note:** Remember to remove sensitive data from the cache like user name and uid.
-4. Add tests for it, [here](https://github.com/oleander/Torrents/blob/master/spec/trackers/the_pirate_bay_spec.rb) is a skeleton from the Pirate Bay test class to use as a start.
-5. Add the site to [this](https://github.com/oleander/Torrents/blob/master/README.md) readme.
+4. Add tests for it, [here](https://github.com/oleander/Torrents/blob/master/spec/trackers/the_pirate_bay_spec.rb) is a skeleton for the Pirate Bay class to use as a start.
+5. Add the tracker to the readme.
 6. Do a pull request, if you want to share you implementation with the world.
 
 You don't have to take care about exceptions, `Torrents` does that for you.
@@ -164,3 +163,7 @@ Add `gem 'torrents'` to your Gemfile and run `bundle`.
 ## Requirements
 
 Torrents is tested in OS X 10.6.6 using Ruby 1.9.2.
+
+## License
+
+Torrents is released under the MIT license.

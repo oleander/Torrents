@@ -40,13 +40,22 @@ The `page` method can be places anywhere before the `results` method.
 
 It starts counting from `1` and goes up, no matter what is used on the site it self.
 
-    >> Torrents.the_pirate_bay.page(6).results
+    $ Torrents.the_pirate_bay.page(6).results
 
 ### Specify some cookies
 
 Some trackers requires cookies to work, even though [The Pirate Bay](http://thepiratebay.org/) is not one of them.
 
-    >> Torrents.the_pirate_bay.cookies(user_id: "123", hash: "c4656002ce46f9b418ce72daccfa5424").results
+    $ Torrents.the_pirate_bay.cookies(user_id: "123", hash: "c4656002ce46f9b418ce72daccfa5424").results
+
+### Step through torrents
+
+Here is an example of how to step through the 10 first pages.
+    
+    $ torrents = Torrents.the_pirate_bay.step
+    $ 10.times { torrents.results }
+    
+You just add the step method and it will increment `page` everytime you apply the `results` method.
 
 ## What methods to work with
 

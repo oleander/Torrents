@@ -3,13 +3,15 @@ $:.push File.expand_path("../lib", __FILE__)
 
 Gem::Specification.new do |s|
   s.name        = "torrents"
-  s.version     = "0.0.1"
+  s.version     = "1.0.0"
   s.platform    = Gem::Platform::RUBY
   s.authors     = ["Linus Oleander"]
   s.email       = ["linus@oleander.nu"]
   s.homepage    = "https://github.com/oleander/Torrents"
-  s.summary     = %q{Search and download torrents from your favorite bittorrent tracker}
-  s.description = %q{Search and download torrents from your favorite bittorrent tracker using Ruby}
+  s.summary     = %q{Search and download torrents from your favorite bittorrent tracker using Ruby}
+  s.description = %q{Search and download torrents from your favorite bittorrent tracker using Ruby. 
+    Get information like; subtitles, movie information from IMDB (actors, grade, original title, length, trailers and so on.), direct download link to the torrent.
+  }
 
   s.rubyforge_project = "torrents"
 
@@ -22,12 +24,8 @@ Gem::Specification.new do |s|
   s.add_dependency('nokogiri')
   s.add_dependency('rchardet19')
   s.add_dependency('classify', '~> 0.0.3')
-  s.add_dependency('movie_searcher')
-  s.add_dependency('undertexter')
+  s.add_dependency('movie_searcher', '~> 0.1.4')
+  s.add_dependency('undertexter', '~> 0.1.5')
   
   s.add_development_dependency('rspec')
-  s.add_development_dependency('autotest-standalone')
-  s.add_development_dependency('autotest')
-  s.add_development_dependency('autotest-growl')
-  s.add_development_dependency('autotest-fsevent')
 end

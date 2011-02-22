@@ -90,7 +90,7 @@ Here is an example.
     $ Torrents.torrentleech.cookies({:my_cookie => "value"}).results 
 
 Take a look at the [tests](https://github.com/oleander/Torrents/tree/master/spec/trackers) for all trackers to get to know more.
-The test are a bit messy, i know. That is one thing that will be cleaned up in the future.
+The test are a bit messy, I know. That is one thing that will be cleaned up in the future.
 
 ## Add you own tracker
 

@@ -97,7 +97,7 @@ Here is an example
 
     $ Torrents.torrentleech.cookies({:member_id => "123", :pass_hash => "value", :PHPSESSID => "value"}).results 
     
-All values you pass to `cookies` must be of type string.
+All values you pass to `cookies` must be of type string, like in the example above.
 
 - Torrentleech
   - member_id

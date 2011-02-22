@@ -233,7 +233,8 @@ module Container
     # Read more about it here: https://github.com/oleander/Undertexter
     # Return type: A single Undertexter object or nil
     def subtitle(option = :english)
-      @subtitle ||= Undertexter.find(self.imdb_id, language: option).based_on(self.title)
+      @subtitle = {} unless @subtitle
+      @subtitle[option] ||= Undertexter.find(self.imdb_id, language: option).based_on(self.title)
     end
     
     # Returns the torrent for the torrent

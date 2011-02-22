@@ -170,6 +170,17 @@ describe Container::Torrent do
   
       torrent.subtitle(:swedish).title.should eq("a subtitle")
     end
+    
+    it "should be able to cache a subtitle" do
+      torrent = create_torrent
+      torrent.should_receive(:imdb_id).any_number_of_times.times.and_return("tt0990407")
+      torrent.should_receive(:title).any_number_of_times.and_return("a subtitle")
+      Undertexter.should_receive(:find).with("tt0990407", language: :swedish).exactly(1).times.and_return([Struct.new(:title).new("a subtitle")])
+      Undertexter.should_receive(:find).with("tt0990407", language: :english).exactly(1).times.and_return([Struct.new(:title).new("a subtitle")])
+      
+      10.times { torrent.subtitle(:swedish).title.should eq("a subtitle") }
+      10.times { torrent.subtitle(:english).title.should eq("a subtitle") }
+    end
   end
 
   

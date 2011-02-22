@@ -97,11 +97,11 @@ The easiest way to solve it was to just isolate the tracker, if it raised an err
 
 You can read errors in two ways.
 
-1. Activate the debugger by adding the `debug` method to your query. The errors will be printed as warnings in the console.
-
+Activate the debugger by adding the `debug` method to your query. The errors will be printed as warnings in the console.
+  
     $ Torrents.the_pirate_bay.debug(true).results
 
-2. Request a list of errors using the `errors` method.
+Request a list of errors using the `errors` method.
 
     $ Torrents.the_pirate_bay.errors
     >> ["...undefined method `attr' for nil:NilClass>...", "32 torrents where found, 2 where not valid", "..."]
@@ -144,7 +144,7 @@ You don't have to take care about exceptions, `Torrents` does that for you.
 
 ## Disclaimer
 
-Before you use this please be sure to get the permission from the tracker in question.
+Before you use `Torrents` please be sure to get permission from the tracker in question to use their data.
  
 ## How do install
 

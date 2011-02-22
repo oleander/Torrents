@@ -71,7 +71,7 @@ The method takes the url as an argument and returns a single `Container::Torrent
 
 ### The Container::Torrent class
 
-It has some nice accessors that might be useful.
+The class has some nice accessors that might be useful.
 
 - **title** (String) The title.
 - **details** (String) The url to the details page.
@@ -86,8 +86,28 @@ It has some nice accessors that might be useful.
 - **subtitle** ([Undertexter](https://github.com/oleander/Undertexter)) The subtitle for the torrent. Takes one argument, the language for the subtitle. Default is `:english`. Read more about it [here](https://github.com/oleander/Undertexter).
 - **movie** ([MovieSearcher](https://github.com/oleander/MovieSearcher)) Read more about the returned object at the [MovieSearcher](https://github.com/oleander/MovieSearcher) project page.
 
-**Note:** The `seeders`, `more`, `subtitle`, `imdb_id` and `ìmdb` method will do another request to the tracker, which means that it will take a bit longer to load then the other methods.
+**Note:** The `seeders`, `movie`, `subtitle`, `imdb_id` and `ìmdb` method will do another request to the tracker, which means that it will take a bit longer to load then the other methods.
 
+## What cookies to pass
+
+Keep in mind that the cookies you pass might be browser and IP-adress sensitive. 
+Which means that it might only work in the current browser using the current Internet connection.
+
+Here is an example
+
+    $ Torrents.torrentleech.cookies({:member_id => "123", :pass_hash => "value", :PHPSESSID => "value"}).results 
+    
+All values you pass to `cookies` must be of type string.
+
+- Torrentleech
+  - member_id
+  - pass_hash
+  - PHPSESSID
+- TTI
+  - hass
+  - pass
+  - uid
+  
 ## Error handling
 
 I decided in the beginning of the project to rescue parse errors during the runtime and instead print them as warnings.
@@ -135,8 +155,8 @@ All heavy lifting has already been done, so adding another tracker should be qui
 
 I'm using [Nokogiri](http://nokogiri.org/) to parse data from the site, which in most cases means that you don't have to mess with regular expressions.
 
-Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-screen-scraping-with-nokogiri) awesome screen cast by [Ryan Bates](https://github.com/ryanb).
-
+Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-screen-scraping-with-nokogiri) awesome screen cast by [Ryan Bates](https://github.com/ryanb). 
+    
 ### The short version
 
 1. Create your own fork of the project.

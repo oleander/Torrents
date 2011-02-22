@@ -52,5 +52,7 @@ describe Trackers::ThePirateBay do
     torrent.imdb.should eq("http://www.imdb.com/title/tt0990407")
     torrent.imdb_id.should eq("tt0990407")
     torrent.id.should eq(6173093)
+    torrent.torrent.should eq("http://torrents.thepiratebay.org/6108060/The.Green.Hornet.2010.TS.XViD-T0XiC-iNK.6108060.TPB.torrent")
+    torrent.title.should eq("The.Green.Hornet.2010.TS.XViD-T0XiC-iNK")
   end
 end

@@ -219,6 +219,7 @@ module Container
     # Return type: String or nil
     def title
       @title ||= self.inner_call(:details_title, self.content)
+      @title = @title.strip unless @title.nil?
     end
     
     # Returns a Undertexter object, if we found a imdb_id, otherwise nil

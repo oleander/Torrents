@@ -49,4 +49,19 @@ describe Trackers::Torrentleech do
     rest_client("http://www.torrentleech.org/torrents/browse/index/categories/1,8,9,10,11,12,13,14,15,29/page/1", "movies")
     Torrents.torrentleech.cookies(cookies).category(:movies).should have(100).results
   end
+  
+  it "should have a working find_by_details method" do
+    rest_client("http://www.torrentleech.org/torrent/281171", "details")
+    torrent = Torrents.torrentleech.cookies(cookies).find_by_details("http://www.torrentleech.org/torrent/281171")
+    
+    torrent.should_not be_dead
+    torrent.seeders.should eq(49)
+    torrent.tid.should eq("a64e45a4260991346b632c866e379b06")
+    torrent.domain.should eq("torrentleech.org")
+    torrent.imdb.should eq("http://www.imdb.com/title/tt1243957")
+    torrent.imdb_id.should eq("tt1243957")
+    torrent.id.should eq(281171)
+    torrent.torrent.should eq("http://www.torrentleech.org/download/281171/The.Tourist.2010.720p.BRRip.x264-TiMPE.torrent")
+    torrent.title.should eq("The Tourist 2010 720p BRRip x264-TiMPE")
+  end
 end

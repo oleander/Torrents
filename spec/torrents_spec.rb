@@ -187,11 +187,16 @@ describe Torrents do
     end
   end
   
-  context "the add method" do
+  context "the find_by_details method" do
     it "should be possible to add a details link and get appropriate data" do
       rest_client("http://thepiratebay.org/torrent/6173093/", "details")
-      
       torrent = Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
+      
+      # Makes sure that all methods returnes something
+      [:seeders, :title, :dead?, :imdb, :imdb_id, :domain, :id].each do |method|
+        torrent.send(method).to_s.should_not be_empty
+      end
+      
       torrent.should_not be_dead
       torrent.seeders.should eq(9383)
       torrent.tid.should_not be_empty

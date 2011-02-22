@@ -141,7 +141,7 @@ describe Container::Torrent do
     torrent = create_torrent
     torrent.should_receive(:imdb_id).and_return(nil)
     torrent.should_receive(:title).and_return("my title")
-    MovieSearcher.should_receive(:find_by_release_name).with("my title").and_return("456")
+    MovieSearcher.should_receive(:find_by_release_name).with("my title", :options => {:details => true}).and_return("456")
     
     torrent.movie.should eq("456")
   end

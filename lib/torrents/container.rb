@@ -218,7 +218,7 @@ module Container
     # Read more about it here: https://github.com/oleander/MovieSearcher
     # Return type: A MovieSearcher object or nil
     def movie
-      self.imdb_id.nil? ? MovieSearcher.find_by_release_name(self.title) : MovieSearcher.find_movie_by_id(self.imdb_id)
+      self.imdb_id.nil? ? MovieSearcher.find_by_release_name(self.title, :options => {:details => true}) : MovieSearcher.find_movie_by_id(self.imdb_id)
     end
     
     # Returns the title for the torrent

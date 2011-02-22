@@ -1,6 +1,13 @@
 # Torrents
 
-Search and download torrents and subtitle from your favorite bittorrent tracker using Ruby.
+Search and download torrents from your favorite bittorrent tracker using Ruby.
+
+Download and get information like:
+
+- Subtitles, english and swedish.
+- Movie information (if the torrent is a movie), actors, grade, original title, length, trailers and so on.
+- A direct download link to the torrent.
+- [IMDB](http://imdb.com) link
 
 ## Which trackers are implemented at the moment?
 

@@ -108,7 +108,7 @@ module Container
   end
   
   class Torrent < Shared
-    attr_accessor :details, :torrent, :title, :seeders
+    attr_accessor :details
     
     def initialize(args)
       args.keys.each { |name| instance_variable_set "@" + name.to_s, args[name] }

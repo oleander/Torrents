@@ -205,6 +205,10 @@ describe Torrents do
   end
   
   context "the errors method" do
+    before(:each) do
+      rest_client("http://thepiratebay.org/recent/0", "recent")
+    end
+    
     it "should return the right error messages" do
       errors = @torrents.errors
       

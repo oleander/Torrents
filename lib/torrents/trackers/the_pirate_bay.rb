@@ -37,7 +37,15 @@ module Trackers
     end
     
     def id(details)
-      details.match(/\/(\d+)\//).to_a[1]
+      details.to_s.match(/\/(\d+)\//).to_a[1]
+    end
+    
+    def details_title(details)
+      details.at_css('#title').content
+    end
+    
+    def details_torrent(details)
+      self.torrent(details) # The same parsing algorithm as the torrent method
     end
   end
 end

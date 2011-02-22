@@ -5,6 +5,8 @@ module Container
   require "iconv"
   require "classify"
   require "digest/md5"
+  require "movie_searcher"
+  require "undertexter"
   
   # Loads all trackers inside the trackers directory
   Dir["#{File.dirname(File.expand_path(__FILE__))}/trackers/*.rb"].each {|rb| require "#{rb}"}
@@ -186,6 +188,30 @@ module Container
     # Just a mirror method for {tid}, just in case someone don't like the method name tid
     def torrent_id
       self.tid
+    end
+    
+    def imdb
+      @imdb ||= self.content.to_s.match(/((http:\/\/)?([w]{3}\.)?imdb.com\/title\/tt\d+)/i).to_a[1]
+    end
+
+    def imdb_id
+      @imdb_id ||= self.imdb.to_s.match(/(tt\d+)/).to_a[1]
+    end
+    
+    def movie
+      self.imdb_id.nil? ? MovieSearcher.find_by_release_name(self.title) : MovieSearcher.find_movie_by_id(self.imdb_id)
+    end
+    
+    def title
+      @title ||= self.inner_call(:details_title, self.content)
+    end
+    
+    def subtitle(option = :english)
+      @subtitle ||= Undertexter.find(self.imdb_id, language: option).based_on(self.title)
+    end
+    
+    def torrent
+      @torrent ||= self.inner_call(:details_torrent, self.content)
     end
   end
 end

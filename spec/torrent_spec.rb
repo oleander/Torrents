@@ -4,7 +4,11 @@ describe Container::Torrent do
   def create_torrent(args = {details: "http://thepiratebay.org/torrent/6173093/", torrent: "http://torrents.thepiratebay.org/6173093/value.torrent", title: "The title", tracker: "the_pirate_bay"})
     Container::Torrent.new(args)
   end
-
+  
+  def valid_url?(url)
+    !! url.match(/(ftp|http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/i)
+  end
+  
   def create_torrents(n)
     torrents = []
     n.times do |n|
@@ -20,7 +24,7 @@ describe Container::Torrent do
   end
   
   def rest_client
-    RestClient.should_receive(:get).with("http://thepiratebay.org/torrent/6173093/", {:timeout => 10, :cookies => nil}).any_number_of_times.and_return(File.read('spec/data/the_pirate_bay/details.html'))
+    RestClient.should_receive(:get).with("http://thepiratebay.org/torrent/6173093/", {:timeout => 10, :cookies => nil}).at_least(1).times.and_return(File.read('spec/data/the_pirate_bay/details.html'))
   end
   
   before(:all) do
@@ -29,7 +33,6 @@ describe Container::Torrent do
   end
   
   it "should contain the right accessors" do
-    rest_client
     @methods.each do |method, _|
       @torrent.methods.should include(method)
     end
@@ -112,5 +115,72 @@ describe Container::Torrent do
     create_torrents(100).each do |torrent|
       torrent.torrent_id.should eq(torrent.tid)
     end
+  end
+  
+  it "should have a working imdb method" do
+    rest_client
+    
+    valid_url?(create_torrent.imdb).should be_true
+    create_torrent.imdb.should eq("http://www.imdb.com/title/tt0990407")
+  end
+  
+  it "should have a working imdb_id method" do
+    rest_client
+    
+    create_torrent.imdb_id.should eq("tt0990407")
+  end
+  
+  it "should call the find_movie_by_id if a movie if found" do
+    rest_client
+    MovieSearcher.should_receive(:find_movie_by_id).with("tt0990407").and_return("123")
+    
+    create_torrent.movie.should eq("123")
+  end
+  
+  it "should call the find_by_release_name if no movie was found" do
+    torrent = create_torrent
+    torrent.should_receive(:imdb_id).and_return(nil)
+    torrent.should_receive(:title).and_return("my title")
+    MovieSearcher.should_receive(:find_by_release_name).with("my title").and_return("456")
+    
+    torrent.movie.should eq("456")
+  end
+  
+  context "the subtitle method" do
+    it "should have a working subtitle method, when a imdb id exists" do
+      torrent = create_torrent
+      torrent.should_receive(:imdb_id).at_least(1).times.and_return("tt0990407")
+      torrent.should_receive(:title).and_return("a subtitle")
+      Undertexter.should_receive(:find).with("tt0990407", language: :english).and_return([Struct.new(:title).new("a subtitle")])
+  
+      torrent.subtitle.title.should eq("a subtitle")
+    end
+  
+    it "should also work when the imdb_id is nil" do
+      torrent = create_torrent
+      torrent.should_receive(:imdb_id).at_least(1).times.and_return(nil)
+      torrent.subtitle.should be_nil
+    end
+    
+    it "should be possible to pass arguments to subtitle" do
+      torrent = create_torrent
+      torrent.should_receive(:imdb_id).at_least(1).times.and_return("tt0990407")
+      torrent.should_receive(:title).and_return("a subtitle")
+      Undertexter.should_receive(:find).with("tt0990407", language: :swedish).and_return([Struct.new(:title).new("a subtitle")])
+  
+      torrent.subtitle(:swedish).title.should eq("a subtitle")
+    end
+  end
+
+  
+  it "should have a working title, even when the title is empty from the beginning" do
+    torrent = create_torrent
+    torrent.title.should eq("The title")
+  end
+  
+  it "should have a working torrent method, even when the torrent is empty from the beginning " do
+    torrent = create_torrent
+    valid_url?(torrent.torrent).should be_true
+    torrent.torrent.match(/\.torrent$/)
   end
 end

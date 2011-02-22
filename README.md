@@ -79,20 +79,20 @@ The method takes the url as an argument and returnes a single `Container::Torren
 I'm about to write a wiki that describs how to add you own site.
 Until then, take a look at the parser for [The Pirate Bay](https://github.com/oleander/Torrents/blob/master/lib/torrents/trackers/the_pirate_bay.rb).
 
-All heavy lifting has been done, so adding another tracker should be easy.
+All heavy lifting has been done, so adding another tracker should be quite easy.
 
 I'm using [Nokogiri](http://nokogiri.org/) to parse data from the site, which in most cases means that you don't have to mess with regular expressions.
+
 Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-screen-scraping-with-nokogiri) awesome screencast by [Ryan Bates](https://github.com/ryanb).
 
 ### The short version
 
-This is how it all works.
-
-1. Create and implement a tracker file inside the [tracker directory](https://github.com/oleander/Torrents/tree/master/lib/torrents/trackers).
-2. Add a cached version of the tracker [here](https://github.com/oleander/Torrents/tree/master/spec/data). **Note:** Remember to remove sensitive data from the cache like username and uid.
-2. Add tests for it, [here](https://github.com/oleander/Torrents/blob/master/spec/trackers/the_pirate_bay_spec.rb) is a skeleton from the Pirate Bay test class to use as a start.
-3. Add the site to this [readme](https://github.com/oleander/Torrents/blob/master/README.md).
-4. Do a pull request, if you want to share you implementation with the world.
+1. Do a fork of the project.
+2. Create and implement a tracker file inside the [tracker directory](https://github.com/oleander/Torrents/tree/master/lib/torrents/trackers).
+3. Add a cached version of the tracker [here](https://github.com/oleander/Torrents/tree/master/spec/data). **Note:** Remember to remove sensitive data from the cache like username and uid.
+4. Add tests for it, [here](https://github.com/oleander/Torrents/blob/master/spec/trackers/the_pirate_bay_spec.rb) is a skeleton from the Pirate Bay test class to use as a start.
+5. Add the site to this [readme](https://github.com/oleander/Torrents/blob/master/README.md).
+6. Do a pull request, if you want to share you implementation with the world.
 
 You don't have to take care about exceptions, `Torrents` does that for you.
 

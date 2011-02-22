@@ -179,7 +179,7 @@ module Container
     # Returns the domain for the torrent, without http or www
     # If the domain for some reason isn't found, it will use an empty string
     def domain
-      @domain ||= self.details.match(/(ftp|http|https):\/\/([w]+\.)?(.+\.[a-z]{2,3})/).to_a[3] || ""
+      @domain ||= self.details.match(/(ftp|http|https):\/\/([w]+\.)?(.+?\.[a-z]{2,3})/i).to_a[3] || ""
     end
     
     # Returns a unique id for the torrent based on the domain and the id of the torrent

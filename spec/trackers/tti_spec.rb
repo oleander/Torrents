@@ -50,4 +50,19 @@ describe Trackers::Tti do
     rest_client("http://tti.nu/browse.php?c47=1&c65=1&c59=1&c48=1&page=0&incldead=0", "movies")
     Torrents.tti.cookies(cookies).category(:movies).should have(50).results
   end
+  
+  it "should have a working find_by_details method" do
+     rest_client("http://tti.nu/details.php?id=132470", "details")
+     torrent = Torrents.tti.cookies(cookies).find_by_details("http://tti.nu/details.php?id=132470")
+
+     torrent.should_not be_dead
+     torrent.seeders.should eq(70)
+     torrent.tid.should eq("413a6c863f0a8f58180f97a52f635bd3")
+     torrent.domain.should eq("tti.nu")
+     torrent.imdb.should eq("http://www.imdb.com/title/tt1536044")
+     torrent.imdb_id.should eq("tt1536044")
+     torrent.id.should eq(132470)
+     torrent.torrent.should eq("http://tti.nu/download2.php/132470/Paranormal.Activity.2.2010.UNRATED.NORDIC.PAL.DVDR-iDiFF.torrent")
+     torrent.title.should eq("Paranormal.Activity.2.2010.UNRATED.NORDIC.PAL.DVDR-iDiFF")
+   end
 end

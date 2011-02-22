@@ -39,5 +39,13 @@ module Trackers
     def id(details)
       details.match(/id=(\d+)/).to_a[1]
     end
+    
+    def details_title(details)
+      details.at_css("h1").content
+    end
+
+    def details_torrent(details)
+      "http://tti.nu/" + details.css("tr a").reject { |link| ! link.attr("href").to_s.match(/\.torrent/) }.first.attr("href")
+    end
   end
 end

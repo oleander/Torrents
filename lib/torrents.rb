@@ -40,6 +40,10 @@ class Torrents < Container::Shared
       gsub('<PAGE>', self.inner_page)
   end
   
+  def step
+    @step = true; self
+  end
+  
   # Makes this the {tracker} tracker
   def add(tracker)
     @tracker = tracker.to_s; self

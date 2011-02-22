@@ -192,7 +192,7 @@ describe Torrents do
       rest_client("http://thepiratebay.org/torrent/6173093/", "details")
       torrent = Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
       
-      # Makes sure that all methods returnes something
+      # Makes sure that all methods returns something
       [:seeders, :title, :dead?, :imdb, :imdb_id, :domain, :id].each do |method|
         torrent.send(method).to_s.should_not be_empty
       end
@@ -226,6 +226,15 @@ describe Torrents do
       lambda do
         errors.uniq!
       end.should_not change(errors, :count)
+    end
+  end
+  
+  context "the step method" do
+    it "should be possible to step from 0 to 10" do
+      10.times do |n|
+        RestClient.should_receive(:get).with("http://thepiratebay.org/recent/#{n}", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("")
+        @torrents.step.results
+      end
     end
   end
 end

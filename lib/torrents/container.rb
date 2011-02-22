@@ -60,7 +60,6 @@ module Container
         value = results.nil? ? self.default_values(method) : results
       end
       
-      
       return value
     end
     
@@ -135,6 +134,9 @@ module Container
     #   => is nil
     #   => contains htmltags
     #   => starts or ends with whitespace
+    # It must also stand up to the following requirements
+    #   => The details and torrent url must be valid
+    #   => The id for the torrent must only contain integers.
     # Returns {true} or {false}
     def valid?
       [:details, :torrent, :title, :id].each do |method|

@@ -40,4 +40,17 @@ describe Trackers::ThePirateBay do
     rest_client("http://thepiratebay.org/browse/201/4/3", "movies")
     Torrents.the_pirate_bay.page(5).category(:movies).should have(30).results
   end
+  
+  it "should have a working find_by_details method" do
+    rest_client("http://thepiratebay.org/torrent/6173093/", "details")
+    torrent = Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
+    
+    torrent.should_not be_dead
+    torrent.seeders.should eq(9383)
+    torrent.tid.should eq("bdc14130add1a279625bf3774c12e89d")
+    torrent.domain.should eq("thepiratebay.org")
+    torrent.imdb.should eq("http://www.imdb.com/title/tt0990407")
+    torrent.imdb_id.should eq("tt0990407")
+    torrent.id.should eq(6173093)
+  end
 end

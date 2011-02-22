@@ -26,7 +26,8 @@ class Torrents < Container::Shared
   end
   
   def content
-    @content ||= Nokogiri::HTML(self.download(self.url))
+    @content = {} unless @content
+    @content[self.inner_page] ||= Nokogiri::HTML(self.download(self.url))
   end
   
   # Set the default page
@@ -118,7 +119,7 @@ class Torrents < Container::Shared
   end
   
   def results
-    return @torrents if @torrents.any?
+    return @torrents if @torrents.any? and not @step
     counter  = 0
     rejected = 0
     self.inner_torrents(self.content).each do |tr|
@@ -139,6 +140,8 @@ class Torrents < Container::Shared
     end
     
     @errors << "#{counter} torrents where found, #{rejected} where not valid" unless rejected.zero?
+    @page += 1 if @step
+
     return @torrents
   end
 end

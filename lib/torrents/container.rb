@@ -39,6 +39,7 @@ module Container
     def error(messages, error = "")
       messages = messages.class == Array ? messages : [messages]
       error = error.inspect[0..60]
+      @errors = [] unless @errors
       @errors << "#{messages.join(", ")}\n#{error}"
       
       return unless @debug

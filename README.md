@@ -90,9 +90,6 @@ The class has some nice accessors that might be useful.
 
 ## What cookies to pass
 
-Keep in mind that the cookies you pass might be browser and IP-adress sensitive. 
-Which means that it might only work in the current browser using the current Internet connection.
-
 Here is an example
 
     $ Torrents.torrentleech.cookies({:member_id => "123", :pass_hash => "value", :PHPSESSID => "value"}).results 
@@ -107,6 +104,8 @@ All values you pass to `cookies` must be of type string, like in the example abo
   - hass
   - pass
   - uid
+
+**Note:** The cookies you pass might be browser and IP-adress sensitive. Which means that it might only work in the current browser using the current Internet connection.
   
 ## Error handling
 

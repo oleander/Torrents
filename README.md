@@ -151,8 +151,8 @@ You don't have to take care about exceptions, `Torrents` does that for you.
 
 ## Disclaimer
 
-Before you use `Torrents` please be sure to get permission from the tracker in question to use their data.
- 
+Before you use `Torrents` make sure you have permission from the tracker in question to use their data.
+
 ## How do install
 
     [sudo] gem install torrents

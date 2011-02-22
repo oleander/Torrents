@@ -81,6 +81,31 @@ It has some nice accessors that might be useful.
 
 **Note:** The `seeders`, `more`, `subtitle`, `imdb_id` and `ìmdb` method will do another request to the tracker, which means that it will take a bit longer to load then the other methods.
 
+## Error handling
+
+I decided in the beginning of the project to rescue parse errors during the runtime and instead print them as warnings.
+
+### Why? - Lack of good selectors
+
+The trackers parser, [this](https://github.com/oleander/Torrents/blob/master/lib/torrents/trackers/the_pirate_bay.rb) one for example, isn't always returning the right data. 
+
+Due to the lack of useful css selectors on the given tracker. It returnes 32 rows, the first and the last containing the header and the footer of the table.
+The unwanted results will be thrown away by the [validator](https://github.com/oleander/Torrents/blob/master/lib/torrents/container.rb#L141), but may raise errors during the runtime.
+The easiest way to solve it was to just isolate the tracker, if it raised an error we return nil.
+
+### Get the error messages
+
+You can read errors in two ways.
+
+1. Activate the debugger by adding the `debug` method to your query. The errors will be printed as warnings in the console.
+
+    $ Torrents.the_pirate_bay.debug(true).results
+
+2. Request a list of errors using the `errors` method.
+
+    $ Torrents.the_pirate_bay.errors
+    >> ["...undefined method `attr' for nil:NilClass>...", "32 torrents where found, 2 where not valid", "..."]
+
 ## How do access tracker X
 
 Here is how to access an implemented tracker.

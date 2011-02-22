@@ -1,14 +1,14 @@
 # Torrents
 
-Search and download torrents from your favorite bittorrent tracker using Ruby.
+Search and download torrents and subtitle from your favorite bittorrent tracker using Ruby.
 
-## Which trackers are implemented?
+## Which trackers are implemented at the moment?
 
-### Open trackers (does not require authentication)
+### Open trackers
 
 - [The Pirate Bay](http://thepiratebay.org/)
 
-### Closed trackes (requires authentication)
+### Closed trackes
 
 - [TTI](http://tti.nu/)
 - [Torrentleech](http://www.torrentleech.org/)
@@ -31,6 +31,8 @@ Search and download torrents from your favorite bittorrent tracker using Ruby.
 
 The `page` method can be places anywhere before the `results` method.
 
+It starts counting from `1` and goes up, no matter what is used on the site it self.
+
     >> Torrents.the_pirate_bay.page(6).results
 
 ### Specify some cookies
@@ -39,47 +41,63 @@ Some trackers requires cookies to work, even though [The Pirate Bay](http://thep
 
     >> Torrents.the_pirate_bay.cookies(user_id: "123", hash: "c4656002ce46f9b418ce72daccfa5424").results
 
-## What is being returned?
+## What methods to work with
 
 ### The results method
 
 As soon as you apply the `results` method on the query it will try to execute your request.
 
-It will return a list of `Container::Torrent` object is the request was sucessfull, otherwise it will return an empty list.
+It will return a list of `Container::Torrent` object if the request was sucessfull, otherwise it will return an empty list.
+
+### The find_by_details method
+
+If you have access to a single details link and want to get some useful data from it, then `find_by_details` might fit you needs.
+
+The method takes the url as an argument and returnes a single `Container::Torrent` object.
+
+    $ Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
+
+# What data to work with
 
 ### The Container::Torrent class
 
 It has some nice accessors that might be useful.
 
-- **title** (String) Title of the torrent.
-- **details** (String) The url to the details page for the torrent.
-- **seeders** (Fixnum) The amount of seeders for the torrent. **Note:** See the *seeders* method.
-- **dead?** (Boolean) Check to see if the torrent has no seeders. If it has no seeders, then `dead?` will be true. **Note:** See the *seeders* method.
-- **torrent** (String) The url to the torrent. This should be a direct link to the torrent.
+- **title** (String) The title.
+- **details** (String) The url to the details page.
+- **seeders** (Fixnum) The amount of seeders.
+- **dead?** (Boolean) Check to see if the torrent has no seeders. If it has no seeders, then `dead?` will be true.
+- **torrent** (String) The url. This should be a direct link to the torrent.
 - **id** (Fixnum) An unique id for the torrent. The id is only unique for this specific torrent, not all torrents.
 - **tid** (String) The `tid` method, also known as `torrent id` is a *truly* unique identifier for all torrents. It is generated using a [MD5](http://sv.wikipedia.org/wiki/MD5) with the torrent domain and the `id` method as a seed.
 - **torrent_id** (String) The same as the `tid` method.
 - **imdb** (String) The imdb link for the torrent, if the details view contains one. 
 - **imdb_id** (String) The imdb id for the torrent, if the details view contain one. Example: tt0066026.
-- **subtitle** ([Undertexter](https://github.com/oleander/Undertexter)) The subtitle for the torrent. Takes one argument, the language for the subtitle. Default is `:english`.
+- **subtitle** ([Undertexter](https://github.com/oleander/Undertexter)) The subtitle for the torrent. Takes one argument, the language for the subtitle. Default is `:english`. Read more about it [here](https://github.com/oleander/Undertexter).
 - **movie** ([MovieSearcher](https://github.com/oleander/MovieSearcher)) Read more about the returned object at the [MovieSearcher](https://github.com/oleander/MovieSearcher) project page.
 
-**Note:** The `seeders`, `more`, `subtitle`, `imdb_id` and `ìmdb` will do another request to the tracker, which means that it will take a bit longer to load then the other methods.
+**Note:** The `seeders`, `more`, `subtitle`, `imdb_id` and `ìmdb` method will do another request to the tracker, which means that it will take a bit longer to load then the other methods.
 
-### The find_by_details method
+## How do access tracker X
 
-If you have access to a single details link and want to get some useful data from it then `find_by_details` might solve you problem.
+Here is how to access an implemented tracker.
+The first static method to apply is the name of the tracker in lower non camel cased letter.
 
-The method takes the url as an argument and returnes a single `Container::Torrent` object.
+The Pirate Bay becomes `the_pirate_bay`, TTI becomes`tti` and Torrentleech `torrentleech`.
 
-    $ Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
+Here is an example.
+
+    $ Torrents.torrentleech.cookies({:my_cookie => "value"}).results 
+
+Take a look at the [tests](https://github.com/oleander/Torrents/tree/master/spec/trackers) for all trackers to get to know more.
+The test are a bit messy, i know. That is one thing that will be cleaned up in the future.
 
 ## Add you own tracker
 
 I'm about to write a wiki that describs how to add you own site.
 Until then, take a look at the parser for [The Pirate Bay](https://github.com/oleander/Torrents/blob/master/lib/torrents/trackers/the_pirate_bay.rb).
 
-All heavy lifting has been done, so adding another tracker should be quite easy.
+All heavy lifting has already been done, so adding another tracker should be quite easy.
 
 I'm using [Nokogiri](http://nokogiri.org/) to parse data from the site, which in most cases means that you don't have to mess with regular expressions.
 
@@ -91,7 +109,7 @@ Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-sc
 2. Create and implement a tracker file inside the [tracker directory](https://github.com/oleander/Torrents/tree/master/lib/torrents/trackers).
 3. Add a cached version of the tracker [here](https://github.com/oleander/Torrents/tree/master/spec/data). **Note:** Remember to remove sensitive data from the cache like username and uid.
 4. Add tests for it, [here](https://github.com/oleander/Torrents/blob/master/spec/trackers/the_pirate_bay_spec.rb) is a skeleton from the Pirate Bay test class to use as a start.
-5. Add the site to this [readme](https://github.com/oleander/Torrents/blob/master/README.md).
+5. Add the site to [this](https://github.com/oleander/Torrents/blob/master/README.md) readme.
 6. Do a pull request, if you want to share you implementation with the world.
 
 You don't have to take care about exceptions, `Torrents` does that for you.

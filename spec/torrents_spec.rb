@@ -203,4 +203,25 @@ describe Torrents do
       torrent.domain.should eq("thepiratebay.org")
     end
   end
+  
+  context "the errors method" do
+    it "should return the right error messages" do
+      errors = @torrents.errors
+      
+      [
+        "An error occurred in the the_pirate_bay class at the details method.\n#<NoMethodError: undefined method `attr' for nil:NilClass>", 
+        "An error occurred in the the_pirate_bay class at the title method.\n#<NoMethodError: undefined method `content' for nil:NilClass>", 
+        "32 torrents where found, 2 where not valid"
+      ].each do |error|
+        errors.should include(error)
+      end
+    end
+    
+    it "should not return any duplicates" do
+      errors = @torrents.errors
+      lambda do
+        errors.uniq!
+      end.should_not change(errors, :count)
+    end
+  end
 end

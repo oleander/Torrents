@@ -1,4 +1,3 @@
-$:.push File.expand_path("../../lib", __FILE__)
 $:.push File.expand_path("../../lib/torrents", __FILE__)
 $:.push File.expand_path("../../lib/torrents/trackers", __FILE__)
 
@@ -27,7 +26,7 @@ class Torrents < Container::Shared
   end
   
   def content
-    Nokogiri::HTML self.download(self.url)
+    @content ||= Nokogiri::HTML(self.download(self.url))
   end
   
   # Set the default page
@@ -105,13 +104,13 @@ class Torrents < Container::Shared
   def create_torrent(arguments)
     arguments.merge!(:debug => @debug) if @debug
     arguments.merge!(:cookies => @cookies) if @cookies
-    return Container::Torrent.new(arguments)
+    Container::Torrent.new(arguments)
   end
   
   # Returns errors from the application.
   # Return type: A list of strings
   def errors
-    self.results; @errors
+    self.results; @errors.uniq
   end
   
   def results

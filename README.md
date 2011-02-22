@@ -46,7 +46,10 @@ Some trackers requires cookies to work, even though [The Pirate Bay](http://thep
 ### The results method
 
 As soon as you apply the `results` method on the query it will try to execute your request.
-
+If you for example want to activate the debugger, define some cookies and specify a page, then you can do it like this.
+      
+      $ Torrents.the_pirate_bay.page(5).debug(true).cookies(:my_cookie => "value").results
+      
 It will return a list of `Container::Torrent` object if the request was sucessfull, otherwise it will return an empty list.
 
 ### The find_by_details method
@@ -105,7 +108,7 @@ Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-sc
 
 ### The short version
 
-1. Do a fork of the project.
+1. Create your own fork of the project.
 2. Create and implement a tracker file inside the [tracker directory](https://github.com/oleander/Torrents/tree/master/lib/torrents/trackers).
 3. Add a cached version of the tracker [here](https://github.com/oleander/Torrents/tree/master/spec/data). **Note:** Remember to remove sensitive data from the cache like username and uid.
 4. Add tests for it, [here](https://github.com/oleander/Torrents/blob/master/spec/trackers/the_pirate_bay_spec.rb) is a skeleton from the Pirate Bay test class to use as a start.
@@ -114,9 +117,9 @@ Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-sc
 
 You don't have to take care about exceptions, `Torrents` does that for you.
 
-## Restrictions
+## Disclaimer
 
-TODO: What restrictions that are involved in using the gem.
+Before you use this please be sure to get the permission from the tracker in question.
  
 ## How do install
 

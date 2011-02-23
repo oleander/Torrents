@@ -1,0 +1,13 @@
+env :production do
+  gem "rest-client"
+  gem "nokogiri"
+  gem "rchardet19"
+  gem "classify", "~> 0.0.3"
+  gem "movie_searcher", "~> 0.1.4"
+  gem "undertexter", "~> 0.1.5"
+end
+
+env :development do
+  gem "rspec"
+  gem "isolate"
+end

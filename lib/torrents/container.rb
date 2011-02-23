@@ -15,19 +15,16 @@ module Container
     include Trackers
     # Downloads the URL, returns an empty string if an error occurred
     # Here we try to convert the downloaded content to UTF8, 
-    # if we"re at least 60% sure that the content that was downloaded actally is was we think
-    # The timeout is set to 10 seconds, after that time, an empty string will be returned 
+    # if we're at least 80% sure that the content that was downloaded actally is was we think.
+    # The timeout is set to 10 seconds, after that time, an empty string will be returned.
     # {url} (String) The URL to download
     def download(url)
       begin
         data = RestClient.get self.url_cleaner(url), {:timeout => 10, :cookies => @cookies}
         cd = CharDet.detect(data, silent: true)     
-        puts cd.inspect   
         raise Exception.new("The confidence level for #{url} is to low: #{cd.confidence}") if not cd.encoding.to_s.match(/^UTF(-)?8$/) and cd.confidence < 0.8
         return Iconv.conv(cd.encoding + "//IGNORE", "UTF-8", data) rescue data
       rescue Exception => error
-        puts error.inspect
-        puts "-------------------"
         self.error("Something when wrong when trying to fetch #{url}", error)
       end
       

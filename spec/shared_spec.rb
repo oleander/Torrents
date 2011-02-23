@@ -5,32 +5,43 @@ describe Container::Shared do
     @shared = Container::Shared.new
   end
   context "the download method" do
+    def rest_client(data = "123")
+      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return(data)
+    end
+    
+    def char_det(encoding, confidence)
+      CharDet.should_receive(:detect).with("123", silent: true).and_return(Struct.new(:encoding, :confidence).new(encoding, confidence))
+    end
+    
     it "should return an empty string when trying to download an empty or non valid URL" do
       @shared.download("non_working_url").should be_empty
       @shared.download(nil).should be_empty
     end
 
     it "should return the content of the site if called with the right url" do
-      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
+      rest_client
       @shared.download("http://example.com").should eq("123")
     end
     
     it "should return an empty string when the confidence level is to low. encoding = Latin 1" do
-      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
-      CharDet.should_receive(:detect).with("123", silent: true).and_return({"encoding" => "Latin 1", "confidence" => 0.6})
+      rest_client; char_det("Latin 1", 0.6)
       @shared.download("http://example.com").should be_empty
     end
     
-    it "should return an empty string when the confidence level is to low. encoding = UTF8" do
-      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
-      CharDet.should_receive(:detect).with("123", silent: true).and_return({"encoding" => "UTF8", "confidence" => 0.6})
+    it "should not return an empty string when the confidence level is to low. encoding = UTF8" do
+      rest_client; char_det("UTF8", 0.6)
       @shared.download("http://example.com").should eq("123")
     end
     
-    it "should return an empty string when the confidence level is to low. encoding = UTF-8" do
-      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
-      CharDet.should_receive(:detect).with("123", silent: true).and_return({"encoding" => "UTF-8", "confidence" => 0.9})
+    it "should not return an empty string when the confidence level is okey. encoding = UTF-8" do
+      rest_client; char_det("UTF-8", 0.9)
       @shared.download("http://example.com").should eq("123")
+    end
+    
+    it "should try to encode the string if the confidence level is okey and the string isn't UTF8" do
+      rest_client("123"); char_det("Latin 1", 0.9)
+      Iconv.should_receive(:conv).with("Latin 1//IGNORE", "UTF-8", "123").and_return("my value")
+      @shared.download("http://example.com").should eq("my value")
     end
   end  
   

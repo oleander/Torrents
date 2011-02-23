@@ -28,6 +28,7 @@ Gem::Specification.new do |s|
   s.add_dependency('undertexter', '~> 0.1.5')
   
   s.add_development_dependency('rspec')
+  s.add_development_dependency('isolate')
   
   s.required_ruby_version = '>= 1.9.0'
 end

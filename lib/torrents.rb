@@ -1,6 +1,7 @@
 $:.push File.expand_path("../../lib/torrents", __FILE__)
 $:.push File.expand_path("../../lib/torrents/trackers", __FILE__)
 
+require "isolate/now"
 require 'rest_client'
 require 'nokogiri'
 require 'torrents/container'

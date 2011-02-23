@@ -1,7 +1,7 @@
 module Trackers
   class Tti
     def details(tr)
-      "http://tti.nu" + tr.to_s.match(/(details\.php\?id=\d+)/i).to_a[1]
+      "http://tti.nu/" + tr.to_s.match(/(details\.php\?id=\d+)/i).to_a[1]
     end
   
     def torrent(tr)

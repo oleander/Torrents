@@ -50,6 +50,13 @@ describe Trackers::Torrentleech do
     Torrents.torrentleech.cookies(cookies).category(:movies).should have(100).results
   end
   
+  it "should return the right details link when trying to fetch recent torrents" do
+    rest_client("http://www.torrentleech.org/torrents/browse/index/page/1", "recent")
+    Torrents.torrentleech.cookies(cookies).results.each do |torrent|
+      torrent.details.should match(/http:\/\/torrentleech\.org\/torrent\/\d+/)
+    end
+  end
+  
   it "should have a working find_by_details method" do
     rest_client("http://www.torrentleech.org/torrent/281171", "details")
     torrent = Torrents.torrentleech.cookies(cookies).find_by_details("http://www.torrentleech.org/torrent/281171")

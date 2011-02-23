@@ -41,6 +41,13 @@ describe Trackers::ThePirateBay do
     Torrents.the_pirate_bay.page(5).category(:movies).should have(30).results
   end
   
+  it "should return the right details link when trying to fetch recent torrents" do
+    rest_client("http://www.torrentleech.org/torrents/browse/index/page/1", "recent")
+    Torrents.the_pirate_bay.results.each do |torrent|
+      torrent.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+/)
+    end
+  end
+  
   it "should have a working find_by_details method" do
     rest_client("http://thepiratebay.org/torrent/6173093/", "details")
     torrent = Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")

@@ -46,6 +46,13 @@ describe Trackers::Tti do
     Torrents.tti.cookies(cookies).should have(50).results
   end
   
+  it "should return the right details link when trying to fetch recent torrents" do
+    rest_client("http://tti.nu/browse.php?page=0&incldead=0", "recent")
+    Torrents.tti.cookies(cookies).results.each do |torrent|
+      torrent.details.should match(/http:\/\/tti\.nu\/details\.php\?id=\d+/)
+    end
+  end
+  
   it "should found 50 recent movies" do
     rest_client("http://tti.nu/browse.php?c47=1&c65=1&c59=1&c48=1&page=0&incldead=0", "movies")
     Torrents.tti.cookies(cookies).category(:movies).should have(50).results

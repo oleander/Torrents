@@ -21,10 +21,14 @@ module Container
     def download(url)
       begin
         data = RestClient.get self.url_cleaner(url), {:timeout => 10, :cookies => @cookies}
-        cd = CharDet.detect(data)
-        return (cd["confidence"] > 0.9) ? (Iconv.conv(cd["encoding"] + "//IGNORE", "UTF-8", data) rescue data) : data
-      rescue
-        self.error("Something when wrong when trying to fetch #{url}", $!)
+        cd = CharDet.detect(data, silent: true)     
+        puts cd.inspect   
+        raise Exception.new("The confidence level for #{url} is to low: #{cd.confidence}") if not cd.encoding.to_s.match(/^UTF(-)?8$/) and cd.confidence < 0.8
+        return Iconv.conv(cd.encoding + "//IGNORE", "UTF-8", data) rescue data
+      rescue Exception => error
+        puts error.inspect
+        puts "-------------------"
+        self.error("Something when wrong when trying to fetch #{url}", error)
       end
       
       # The default value, if {RestClient} for some reason craches (like wrong encoding or a timeout)

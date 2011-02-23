@@ -14,7 +14,25 @@ describe Container::Shared do
       RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
       @shared.download("http://example.com").should eq("123")
     end
-  end
+    
+    it "should return an empty string when the confidence level is to low. encoding = Latin 1" do
+      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
+      CharDet.should_receive(:detect).with("123", silent: true).and_return({"encoding" => "Latin 1", "confidence" => 0.6})
+      @shared.download("http://example.com").should be_empty
+    end
+    
+    it "should return an empty string when the confidence level is to low. encoding = UTF8" do
+      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
+      CharDet.should_receive(:detect).with("123", silent: true).and_return({"encoding" => "UTF8", "confidence" => 0.6})
+      @shared.download("http://example.com").should eq("123")
+    end
+    
+    it "should return an empty string when the confidence level is to low. encoding = UTF-8" do
+      RestClient.should_receive(:get).with("http://example.com", {:timeout => 10, :cookies => nil}).exactly(1).times.and_return("123")
+      CharDet.should_receive(:detect).with("123", silent: true).and_return({"encoding" => "UTF-8", "confidence" => 0.9})
+      @shared.download("http://example.com").should eq("123")
+    end
+  end  
   
   context "the error method" do
     it "should have a error method" do

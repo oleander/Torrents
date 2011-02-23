@@ -1,4 +1,4 @@
-require "isolate/now"
+# require "isolate/now"
 require "rspec"
 require "torrents"
 require "torrents/container"

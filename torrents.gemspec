@@ -26,9 +26,9 @@ Gem::Specification.new do |s|
   s.add_dependency('classify', '~> 0.0.3')
   s.add_dependency('movie_searcher', '~> 0.1.4')
   s.add_dependency('undertexter', '~> 0.1.5')
+  s.add_dependency('isolate')
   
   s.add_development_dependency('rspec')
-  s.add_development_dependency('isolate')
   
   s.required_ruby_version = '>= 1.9.0'
 end

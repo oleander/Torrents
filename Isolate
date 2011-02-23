@@ -5,9 +5,9 @@ env :production do
   gem "classify", "~> 0.0.3"
   gem "movie_searcher", "~> 0.1.4"
   gem "undertexter", "~> 0.1.5"
+  gem "isolate"
 end
 
 env :development do
   gem "rspec"
-  gem "isolate"
 end

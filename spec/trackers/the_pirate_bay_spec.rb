@@ -42,7 +42,7 @@ describe Trackers::ThePirateBay do
   end
   
   it "should return the right details link when trying to fetch recent torrents" do
-    rest_client("http://www.torrentleech.org/torrents/browse/index/page/1", "recent")
+    rest_client("http://thepiratebay.org/torrent/6173093/", "recent")
     Torrents.the_pirate_bay.results.each do |torrent|
       torrent.details.should match(/http:\/\/thepiratebay\.org\/torrent\/\d+/)
     end

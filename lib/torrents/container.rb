@@ -22,7 +22,7 @@ module Container
       begin
         data = RestClient.get self.url_cleaner(url), {:timeout => 10, :cookies => @cookies}
         cd = CharDet.detect(data)
-        return (cd["confidence"] > 0.6) ? (Iconv.conv(cd["encoding"] + "//IGNORE", "UTF-8", data) rescue data) : data
+        return (cd["confidence"] > 0.9) ? (Iconv.conv(cd["encoding"] + "//IGNORE", "UTF-8", data) rescue data) : data
       rescue
         self.error("Something when wrong when trying to fetch #{url}", $!)
       end

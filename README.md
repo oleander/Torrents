@@ -76,7 +76,7 @@ The method takes the url as an argument and returns a single `Container::Torrent
 
     $ Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
 
-# What data to work with
+## What data to work with
 
 ### The Container::Torrent class
 

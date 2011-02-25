@@ -117,8 +117,8 @@ All values you pass to `cookies` must be of type string, like in the example abo
   - uid
   
 **General note:** The cookies you pass might be browser and IP-adress sensitive. Which means that it might only work in the current browser using the current Internet connection.
-**Torrentleech note:** Remember to check the *Remember Me* checkbox before using your browsers cookies.
 
+**Torrentleech note:** Remember to check the *Remember Me* checkbox before using your browsers cookies.
 
 ## Error handling
 

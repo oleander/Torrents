@@ -53,7 +53,7 @@ describe Trackers::Torrentleech do
   it "should return the right details link when trying to fetch recent torrents" do
     rest_client("http://www.torrentleech.org/torrents/browse/index/page/1", "recent")
     Torrents.torrentleech.cookies(cookies).results.each do |torrent|
-      torrent.details.should match(/http:\/\/torrentleech\.org\/torrent\/\d+/)
+      torrent.details.should match(/http:\/\/www\.torrentleech\.org\/torrent\/\d+/)
     end
   end
   
@@ -70,5 +70,15 @@ describe Trackers::Torrentleech do
     torrent.id.should eq(281171)
     torrent.torrent.should eq("http://torrentleech.org/download/281171/The.Tourist.2010.720p.BRRip.x264-TiMPE.torrent")
     torrent.title.should eq("The Tourist 2010 720p BRRip x264-TiMPE")
+  end
+  
+  it "should return the corrent url" do
+    rest_client("http://www.torrentleech.org/torrents/browse/index/query/dvd/page/1", "search")
+    torrents = Torrents.torrentleech.cookies(cookies).search("dvd")
+    
+    torrents.results.each do |torrent|
+      torrent.torrent.should match(/^http:\/\/www/)
+      torrent.details.should match(/^http:\/\/www/)
+    end
   end
 end

@@ -1,11 +1,11 @@
 module Trackers
   class Torrentleech
     def details(tr)
-      "http://torrentleech.org" + tr.at_css(".title a").attr("href")
+      "http://www.torrentleech.org" + tr.at_css(".title a").attr("href")
     end
   
     def torrent(tr)
-      "http://torrentleech.org" + tr.at_css("td.quickdownload a").attr("href")
+      "http://www.torrentleech.org" + tr.at_css("td.quickdownload a").attr("href")
     end
   
     def title(tr)

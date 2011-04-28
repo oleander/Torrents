@@ -219,7 +219,11 @@ module Container
     # Read more about it here: https://github.com/oleander/MovieSearcher
     # Return type: A MovieSearcher object or nil
     def movie
-      self.imdb_id.nil? ? MovieSearcher.find_by_release_name(self.title, :options => {:details => true}) : MovieSearcher.find_movie_by_id(self.imdb_id)
+      if imdb_id
+        @_movie ||= MovieSearcher.find_movie_by_id(imdb_id)
+      else 
+        @_movie ||= MovieSearcher.find_by_release_name(title, :options => {:details => true}) 
+      end
     end
     
     # Returns the title for the torrent
@@ -235,7 +239,9 @@ module Container
     # Return type: A single Undertexter object or nil
     def subtitle(option = :english)
       @subtitle = {} unless @subtitle
-      @subtitle[option] ||= Undertexter.find(self.imdb_id, language: option).based_on(self.title)
+      term = imdb_id
+      term ||= movie.imdb_id if movie
+      @subtitle[option] ||= Undertexter.find(term, language: option).based_on(title)
     end
     
     # Returns the torrent for the torrent

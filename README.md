@@ -209,11 +209,11 @@ Don't know Nokogiri? Take a look at [this](http://railscasts.com/episodes/190-sc
 5. Add the tracker to the readme.
 6. Do a pull request, if you want to share you implementation with the world.
 
-You don't have to take care about exceptions, `Torrents` does that for you.
+You don't have to take care about exceptions, *Torrents* does that for you.
 
 ## Disclaimer
 
-Before you use `Torrents` make sure you have permission from the tracker in question to use their data.
+Before you use *Torrents* make sure you have permission from the tracker in question to use their data.
 
 ## How do install
 
@@ -225,8 +225,8 @@ Add `gem 'torrents'` to your Gemfile and run `bundle`.
 
 ## Requirements
 
-Torrents is tested in OS X 10.6.6 using Ruby 1.9.2.
+*Torrents* is tested in OS X 10.6.6 using Ruby 1.9.2.
 
 ## License
 
-Torrents is released under the MIT license.
+*Torrents* is released under the MIT license.

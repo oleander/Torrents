@@ -24,37 +24,52 @@ Download and get information like:
 
 ### Search for torrents
 
-    >> Torrents.the_pirate_bay.search("chuck").results
-    
+```` ruby
+Torrents.the_pirate_bay.search("chuck").results
+````
+
 ### List recent torrents
 
-    >> Torrents.the_pirate_bay.results
-    
+```` ruby
+Torrents.the_pirate_bay.results
+````
+
 ### List recent torrents - with category
 
-    >> Torrents.the_pirate_bay.category(:movies).results
-    
+```` ruby
+Torrents.the_pirate_bay.category(:movies).results
+````
+
 ### Specify a page
 
 The `page` method can be places anywhere before the `results` method.
 
 It starts counting from `1` and goes up, no matter what is used on the site it self.
 
-    $ Torrents.the_pirate_bay.page(6).results
+```` ruby
+Torrents.the_pirate_bay.page(6).results
+````
 
 ### Specify some cookies
 
 Some trackers requires cookies to work, even though [The Pirate Bay](http://thepiratebay.org/) is not one of them.
 
-    $ Torrents.the_pirate_bay.cookies(user_id: "123", hash: "c4656002ce46f9b418ce72daccfa5424").results
+```` ruby
+Torrents.the_pirate_bay.cookies({
+  user_id: "123", 
+  hash: "c4656002ce46f9b418ce72daccfa5424"
+}).results
+````
 
 ### Step through torrents
 
 Here is an example of how to step through the 10 first pages.
-    
-    $ torrents = Torrents.the_pirate_bay.step
-    $ 10.times { torrents.results }
-    
+
+```` ruby    
+torrents = Torrents.the_pirate_bay.step
+10.times { torrents.results }
+````
+
 You just add the step method and it will increment `page` everytime you apply the `results` method.
 
 ## What methods to work with
@@ -63,9 +78,11 @@ You just add the step method and it will increment `page` everytime you apply th
 
 As soon as you apply the `results` method on the query it will try to execute your request.
 If you for example want to activate the debugger, define some cookies or specify a page, then you might do something like this.
-      
-      $ Torrents.the_pirate_bay.page(5).debug(true).cookies(:my_cookie => "value").results
-      
+
+```` ruby      
+Torrents.the_pirate_bay.page(5).debug(true).cookies(:my_cookie => "value").results
+````
+
 It will return a list of `Container::Torrent` object if the request was sucessfull, otherwise an empty list.
 
 ### The find_by_details method
@@ -74,7 +91,9 @@ If you have access to a single details link and want to get some useful data fro
 
 The method takes the url as an argument and returns a single `Container::Torrent` object.
 
-    $ Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
+```` ruby
+Torrents.the_pirate_bay.find_by_details("http://thepiratebay.org/torrent/6173093/")
+````
 
 ## What data to work with
 
@@ -101,8 +120,14 @@ The class has some nice accessors that might be useful.
 
 Here is an example
 
-    $ Torrents.torrentleech.cookies({:member_id => "123", :pass_hash => "value", :PHPSESSID => "value"}).results 
-    
+```` ruby
+Torrents.torrentleech.cookies({
+  :member_id => "123", 
+  :pass_hash => "value", 
+  :PHPSESSID => "value"
+}).results 
+````
+
 All values you pass to `cookies` must be of type string, like in the example above.
 
 - Torrentleech
@@ -137,13 +162,17 @@ The easiest way to solve it was to just isolate the tracker, if it raised an err
 You can read errors in two ways.
 
 Activate the debugger by adding the `debug` method to your query. The errors will be printed as warnings in the console.
-  
-    $ Torrents.the_pirate_bay.debug(true).results
+
+```` ruby  
+Torrents.the_pirate_bay.debug(true).results
+````
 
 Request a list of errors using the `errors` method.
 
-    $ Torrents.the_pirate_bay.errors
-    >> ["...undefined method `attr' for nil:NilClass>...", "32 torrents where found, 2 where not valid", "..."]
+```` ruby
+p Torrents.the_pirate_bay.errors
+# => ["...undefined method `attr' for nil:NilClass>...", "32 torrents where found, 2 where not valid", "..."]
+````
 
 ## How do access tracker X
 
@@ -154,7 +183,9 @@ The Pirate Bay becomes `the_pirate_bay`, TTI becomes `tti` and Torrentleech `tor
 
 Here is an example.
 
-    $ Torrents.torrentleech.cookies({:my_cookie => "value"}).results 
+```` ruby
+Torrents.torrentleech.cookies({:my_cookie => "value"}).results 
+````
 
 Take a look at the [tests](https://github.com/oleander/Torrents/tree/master/spec/trackers) for all trackers to get to know more.
 

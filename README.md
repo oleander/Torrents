@@ -9,6 +9,11 @@ Download and get information like:
 - A direct download link to the torrent.
 - [IMDB](http://imdb.com) link
 
+## This version is no longer maintained
+
+Version 1.0 is no longer maintained.
+I might release version 2.0 in the future.
+
 ## Which trackers are implemented at the moment?
 
 ### Open trackers
